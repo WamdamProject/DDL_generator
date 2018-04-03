@@ -1,5 +1,7 @@
 # Create Django app for a working python script to convert XML to four DDL RDBS schemas: MSSQ, MySQL, SQLite, and PostGreSQL
 
+*The app is not ready, its in progress. You still can use the scripts_original using the Command prompt
+
 ![image](https://github.com/amabdallah/DDL_generator/blob/master/DDL_Generator.jpg)
 
 I will deploy the app later on Amazon Web Service  
