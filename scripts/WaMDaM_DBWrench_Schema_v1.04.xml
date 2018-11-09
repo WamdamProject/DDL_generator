@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><Db flnm="WaMDaM_DBWrench_Schema_1.01" nm="WaMDaM1.01" ver="1.3.4">
+<?xml version="1.0" encoding="UTF-8"?><Db flnm="WaMDaM_DBWrench_Schema_v1.04" nm="WaMDaM_v1.04" ver="1.3.4">
   <VerLbl/>
   <VerNotes/>
   <DefTblOpts/>
@@ -88,10 +88,10 @@
         <StPr stA="Metadata" stB="CommonAttributes"/>
       </SchTrHis>
     </Tbl>
-    <Tbl UsSo="1" nm="CV_DescriptorValues">
+    <Tbl UsSo="1" nm="CV_Categorical">
       <Cm>Controlled text values that can be shared across attributes of instances like Land use “Grass_Pasture” or irrigation type  "Flood”, states "Utah"</Cm>
       <TblOpts/>
-      <Pk ClNs="Term" nm="pkCV_DescriptorValues"/>
+      <Pk ClNs="Term" nm="pkCV_Categorical"/>
       <Cl au="0" df="" nm="Term" nu="0">
         <DT arr="0" ds="VarChar" en="" id="12" ln="255" sc="null" sg="1" un="0"/>
         <Cm>The machine version of the vocabulary term (no spaces). May be the same as the term.</Cm>
@@ -373,6 +373,14 @@
         <DT arr="0" ds="VarChar" en="" id="12" ln="5000" sc="null" sg="1" un="0"/>
         <Cm>A link to a description of or a formal specification of the spatial reference system.	</Cm>
       </Cl>
+      <Cl au="0" df="" nm="LinearFactor" nu="1">
+        <DT arr="0" ds="Float" en="" id="6" ln="null" sc="null" sg="1" un="0"/>
+        <Cm>See HydraPlatform http://umwrg.github.io/HydraPlatform/devdocs/techdocs/units_and_dimensions.html?highlight=unit</Cm>
+      </Cl>
+      <Cl au="0" df="" nm="ConstantFactor" nu="1">
+        <DT arr="0" ds="Float" en="" id="6" ln="null" sc="null" sg="1" un="0"/>
+        <Cm>See HydraPlatform http://umwrg.github.io/HydraPlatform/devdocs/techdocs/units_and_dimensions.html?highlight=unit</Cm>
+      </Cl>
       <UniqueConstraints/>
       <SchTrHis>
         <StPr stA="WaMDaMCore" stB="Units"/>
@@ -382,19 +390,19 @@
     <CustomTypes/>
   </Sch>
   <Sch Cm="" nm="DataValues">
-    <Tbl UsSo="1" nm="DescriptorValues">
+    <Tbl UsSo="1" nm="CategoricalValues">
       <Cm>This table is similar to Text Free table but this one enforces controlled vocabulary on text data values to help users consistently define static descriptive text data values across instances. For example, a user can choose the owner type of a reservoir from a user predefined list like Federal, State, Local, and Private.</Cm>
       <TblOpts/>
-      <Pk ClNs="DescriptorValueID" nm="pkDescriptorValues"/>
-      <Cl au="1" df="" nm="DescriptorValueID" nu="0">
+      <Pk ClNs="CategoricalValueID" nm="pkCategoricalValues"/>
+      <Cl au="1" df="" nm="CategoricalValueID" nu="0">
         <DT arr="0" ds="Integer" en="" id="4" ln="null" sc="null" sg="1" un="0"/>
         <Cm>Primary key identifier</Cm>
       </Cl>
-      <Cl au="0" df="" nm="DescriptorValue" nu="0">
+      <Cl au="0" df="" nm="CategoricalValue" nu="0">
         <DT arr="0" ds="VarChar" en="" id="12" ln="500" sc="null" sg="1" un="0"/>
         <Cm>A character value that describe an instance of a system componenet</Cm>
       </Cl>
-      <Cl au="0" df="" nm="DescriptorValueCV" nu="1">
+      <Cl au="0" df="" nm="CategoricalValueCV" nu="1">
         <DT arr="0" ds="VarChar" en="" id="12" ln="255" sc="null" sg="1" un="0"/>
         <Cm>Foreign key identifier a controlled text value</Cm>
       </Cl>
@@ -402,15 +410,15 @@
         <DT arr="0" ds="Integer" en="" id="4" ln="null" sc="null" sg="1" un="0"/>
         <Cm>Foreign key identifier for a DataValuesMapper record</Cm>
       </Cl>
-      <Fk deAc="3" nm="fk_DescriptorValues_CV_DescriptorValues" prLkCl="Term" upAc="3">
-        <PrTb mn="0" nm="CV_DescriptorValues" oe="1" sch="CVs" zr="1"/>
-        <CdTb mn="1" nm="DescriptorValues" oe="0" sch="DataValues" zr="1"/>
-        <ClPr cdCl="DescriptorValueCV" prCl="Term"/>
-      </Fk>
-      <Fk deAc="3" nm="fk_DescriptorValues_ValuesMapper" prLkCl="ValuesMapperID" upAc="3">
+      <Fk deAc="3" nm="fk_CategoricalValues_ValuesMapper" prLkCl="ValuesMapperID" upAc="3">
         <PrTb mn="0" nm="ValuesMapper" oe="1" sch="DataValues" zr="0"/>
-        <CdTb mn="1" nm="DescriptorValues" oe="0" sch="DataValues" zr="1"/>
+        <CdTb mn="1" nm="CategoricalValues" oe="0" sch="DataValues" zr="1"/>
         <ClPr cdCl="ValuesMapperID" prCl="ValuesMapperID"/>
+      </Fk>
+      <Fk deAc="3" nm="fk_DescriptorValues_CV_DescriptorValues" prLkCl="Term" upAc="3">
+        <PrTb mn="0" nm="CV_Categorical" oe="1" sch="CVs" zr="1"/>
+        <CdTb mn="1" nm="CategoricalValues" oe="0" sch="DataValues" zr="1"/>
+        <ClPr cdCl="CategoricalValueCV" prCl="Term"/>
       </Fk>
       <UniqueConstraints/>
       <SchTrHis>
@@ -460,6 +468,30 @@
         <StPr stA="TestApril" stB="FileBasedData"/>
       </SchTrHis>
     </Tbl>
+    <Tbl UsSo="1" nm="FreeText">
+      <Cm>This table is similar to Text Free table but this one enforces controlled vocabulary on text data values to help users consistently define static descriptive text data values across instances. For example, a user can choose the owner type of a reservoir from a user predefined list like Federal, State, Local, and Private.</Cm>
+      <TblOpts/>
+      <Pk ClNs="FreeTextID" nm="pkFreeText"/>
+      <Cl au="1" df="" nm="FreeTextID" nu="0">
+        <DT arr="0" ds="Integer" en="" id="4" ln="null" sc="null" sg="1" un="0"/>
+        <Cm>Primary key identifier</Cm>
+      </Cl>
+      <Cl au="0" df="" nm="FreeTextValue" nu="0">
+        <DT arr="0" ds="VarChar" en="" id="12" ln="500" sc="null" sg="1" un="0"/>
+        <Cm>A character value that describe an instance of a system componenet</Cm>
+      </Cl>
+      <Cl au="0" df="" nm="ValuesMapperID" nu="0">
+        <DT arr="0" ds="Integer" en="" id="4" ln="null" sc="null" sg="1" un="0"/>
+        <Cm>Foreign key identifier for a DataValuesMapper record</Cm>
+      </Cl>
+      <Fk deAc="3" nm="fk_FreeText_ValuesMapper" prLkCl="ValuesMapperID" upAc="3">
+        <PrTb mn="0" nm="ValuesMapper" oe="1" sch="DataValues" zr="0"/>
+        <CdTb mn="1" nm="FreeText" oe="0" sch="DataValues" zr="1"/>
+        <ClPr cdCl="ValuesMapperID" prCl="ValuesMapperID"/>
+      </Fk>
+      <UniqueConstraints/>
+      <SchTrHis/>
+    </Tbl>
     <Tbl UsSo="1" nm="MultiAttributeSeries">
       <Cm>This table stores references to attributes that comprise attributes that are paired together </Cm>
       <TblOpts>WITHOUT OIDS</TblOpts>
@@ -476,15 +508,15 @@
         <DT arr="0" ds="Integer" en="" id="4" ln="null" sc="null" sg="1" un="0"/>
         <Cm>Foreign key identifier for a DataValuesMapper record</Cm>
       </Cl>
-      <Fk deAc="3" nm="fk_MultiAttributeSeries_DataValuesMapper" prLkCl="ValuesMapperID" upAc="3">
-        <PrTb mn="0" nm="ValuesMapper" oe="1" sch="DataValues" zr="0"/>
+      <Fk deAc="3" nm="fk_MultiAttributeSeries_Mappings" prLkCl="MappingID" upAc="3">
+        <PrTb mn="0" nm="Mappings" oe="1" sch="NetScen" zr="0"/>
         <CdTb mn="1" nm="MultiAttributeSeries" oe="0" sch="DataValues" zr="1"/>
-        <ClPr cdCl="ValuesMapperID" prCl="ValuesMapperID"/>
+        <ClPr cdCl="MappingID_Attribute" prCl="MappingID"/>
       </Fk>
       <Fk deAc="3" nm="fk_MultiAttributeSeries_ValuesMapper" prLkCl="ValuesMapperID" upAc="3">
         <PrTb mn="0" nm="ValuesMapper" oe="1" sch="DataValues" zr="0"/>
         <CdTb mn="1" nm="MultiAttributeSeries" oe="0" sch="DataValues" zr="1"/>
-        <ClPr cdCl="MappingID_Attribute" prCl="ValuesMapperID"/>
+        <ClPr cdCl="ValuesMapperID" prCl="ValuesMapperID"/>
       </Fk>
       <UniqueConstraints/>
       <SchTrHis>
@@ -558,6 +590,10 @@
       <Cl au="0" df="" nm="SeasonName" nu="0">
         <DT arr="0" ds="VarChar" en="" id="12" ln="255" sc="null" sg="1" un="0"/>
         <Cm>text value of the season names as used in the source	</Cm>
+      </Cl>
+      <Cl au="0" df="" nm="SeasonDateFormate" nu="1">
+        <DT arr="0" ds="DateTime" en="" id="700" ln="null" sc="null" sg="1" un="0"/>
+        <Cm>isoformat %Y/%m/%d  where the year value is fixed to 1999. this is used in HydraPlatfom and Open Agua @ http://openagua.org or http://docs.openagua.org/ http://umwrg.github.io/HydraPlatform/devdocs/techdocs/timeseries.html?highlight=seasonal</Cm>
       </Cl>
       <Cl au="0" df="" nm="SeasonOrder" nu="0">
         <DT arr="0" ds="Integer" en="" id="4" ln="null" sc="null" sg="1" un="0"/>
@@ -728,6 +764,10 @@
       <Cl au="0" df="" nm="MethodTypeCV" nu="1">
         <DT arr="0" ds="VarChar" en="" id="12" ln="255" sc="null" sg="1" un="0"/>
         <Cm>CV term of the method type used to report or generate a data value</Cm>
+      </Cl>
+      <Cl au="0" df="" nm="DataQuality" nu="1">
+        <DT arr="0" ds="Text" en="" id="703" ln="null" sc="null" sg="1" un="0"/>
+        <Cm>Document the quality of data and any associated uncertainty</Cm>
       </Cl>
       <Cl au="0" df="" nm="PersonID" nu="0">
         <DT arr="0" ds="Integer" en="" id="4" ln="null" sc="null" sg="1" un="0"/>
@@ -1004,6 +1044,10 @@
         <DT arr="0" ds="Integer" en="" id="4" ln="null" sc="null" sg="1" un="0"/>
         <Cm>Foreign key identifier for a Value Mapper record</Cm>
       </Cl>
+      <Cl au="0" df="" nm="Verified" nu="1">
+        <DT arr="0" ds="VarChar" en="" id="12" ln="5" sc="null" sg="1" un="0"/>
+        <Cm>Verified or not. </Cm>
+      </Cl>
       <Fk deAc="3" nm="fk_Mappings_Attributes" prLkCl="AttributeID" upAc="3">
         <PrTb mn="0" nm="Attributes" oe="1" sch="ResourceStruct" zr="0"/>
         <CdTb mn="1" nm="Mappings" oe="0" sch="NetScen" zr="1"/>
@@ -1192,6 +1236,12 @@
         <DT arr="0" ds="VarChar" en="" id="12" ln="255" sc="null" sg="1" un="0"/>
         <Cm>The name of the attribute</Cm>
       </Cl>
+      <Cl au="0" df="" nm="AttributeName_Abstract" nu="1">
+        <DT arr="0" ds="VarChar" en="" id="12" ln="255" sc="null" sg="1" un="0"/>
+        <Cm>An optional field that binds any different attribute implementations that include units and datatypes such as “storage_AF” and “storage-gallons” into a general concept “storage”. 
+
+Attribute name as-is in the model without adding abbrto it as in WEAP to count for different versions of the same attribute that have different unit or data type</Cm>
+      </Cl>
       <Cl au="0" df="" nm="AttributeNameCV" nu="1">
         <DT arr="0" ds="VarChar" en="" id="12" ln="255" sc="null" sg="1" un="0"/>
         <Cm>CV term for a universal attribute name</Cm>
@@ -1207,6 +1257,11 @@
       <Cl au="0" df="" nm="UnitNameCV" nu="1">
         <DT arr="0" ds="VarChar" en="" id="12" ln="255" sc="null" sg="1" un="0"/>
         <Cm>CV term for a universal unit name</Cm>
+      </Cl>
+      <Cl au="0" df="1" nm="AttributeScale" nu="1">
+        <DT arr="0" ds="Integer" en="" id="4" ln="null" sc="null" sg="1" un="0"/>
+        <Cm>A multiplier of the attribute values as used in WEAP. 
+The default is 1. It takes values like 1000000 for a million. </Cm>
       </Cl>
       <Cl au="0" df="" nm="AttributeDataTypeCV" nu="0">
         <DT arr="0" ds="VarChar" en="" id="12" ln="255" sc="null" sg="1" un="0"/>
@@ -1400,77 +1455,86 @@
       <svg path=""/>
     </DiaProps>
     <TbGl bkCl="ff2c85b2" sch="ResourceStruct" tbl="AttributeCategories" x="431" y="372"/>
-    <TbGl bkCl="ff2c85b2" sch="ResourceStruct" tbl="Attributes" x="488" y="546"/>
+    <TbGl bkCl="ff2c85b2" sch="ResourceStruct" tbl="Attributes" x="487" y="545"/>
     <TbGl bkCl="ff2c85b2" sch="ResourceStruct" tbl="ResourceTypes" x="46" y="816"/>
     <TbGl bkCl="ff2c85b2" sch="ResourceStruct" tbl="ObjectCategories" x="28" y="375"/>
     <TbGl bkCl="ff2c85b2" sch="ResourceStruct" tbl="ObjectTypes" x="44" y="540"/>
-    <TbGl bkCl="ffb26f2c" sch="Metadata" tbl="Methods" x="903" y="812"/>
+    <TbGl bkCl="ffb26f2c" sch="Metadata" tbl="Methods" x="903" y="811"/>
     <TbGl bkCl="ffb26f2c" sch="Metadata" tbl="Organizations" x="1201" y="1089"/>
     <TbGl bkCl="ffb26f2c" sch="Metadata" tbl="People" x="1231" y="817"/>
     <TbGl bkCl="ffb26f2c" sch="Metadata" tbl="Sources" x="1580" y="839"/>
     <TbGl bkCl="ff85b22c" sch="NetScen" tbl="Connections" x="889" y="49"/>
     <TbGl bkCl="ff85b22c" sch="NetScen" tbl="InstanceCategories" x="1067" y="184"/>
-    <TbGl bkCl="ff85b22c" sch="NetScen" tbl="Instances" x="889" y="323"/>
-    <TbGl bkCl="ff85b22c" sch="NetScen" tbl="Mappings" x="1022" y="536"/>
+    <TbGl bkCl="ff85b22c" sch="NetScen" tbl="Instances" x="890" y="301"/>
+    <TbGl bkCl="ff85b22c" sch="NetScen" tbl="Mappings" x="1022" y="509"/>
     <TbGl bkCl="ff85b22c" sch="NetScen" tbl="MasterNetworks" x="1460" y="53"/>
-    <TbGl bkCl="ff85b22c" sch="NetScen" tbl="ScenarioMappings" x="1459" y="507"/>
-    <TbGl bkCl="ff85b22c" sch="NetScen" tbl="Scenarios" x="1495" y="248"/>
-    <TbGl bkCl="ffb22c2c" sch="DataValues" tbl="ValuesMapper" x="1883" y="610"/>
-    <TbGl bkCl="ffb22c2c" sch="DataValues" tbl="ElectronicFiles" x="2342" y="585"/>
-    <TbGl bkCl="ffb22c2c" sch="DataValues" tbl="MultiAttributeSeries" x="1869" y="1074"/>
-    <TbGl bkCl="ffb22c2c" sch="DataValues" tbl="MultiAttributeSeriesValues" x="2303" y="1065"/>
-    <TbGl bkCl="ffb22c2c" sch="DataValues" tbl="NumericValues" x="2114" y="81"/>
-    <TbGl bkCl="ffb22c2c" sch="DataValues" tbl="DescriptorValues" x="2193" y="426"/>
-    <TbGl bkCl="ffb22c2c" sch="DataValues" tbl="TimeSeries" x="2022" y="737"/>
-    <TbGl bkCl="ffb22c2c" sch="DataValues" tbl="TimeSeriesValues" x="2387" y="843"/>
-    <TbGl bkCl="ffb22c2c" sch="DataValues" tbl="SeasonalNumericValues" x="2117" y="234"/>
+    <TbGl bkCl="ff85b22c" sch="NetScen" tbl="ScenarioMappings" x="1461" y="504"/>
+    <TbGl bkCl="ff85b22c" sch="NetScen" tbl="Scenarios" x="1502" y="243"/>
+    <TbGl bkCl="ffb22c2c" sch="DataValues" tbl="ValuesMapper" x="1933" y="591"/>
+    <TbGl bkCl="ffb22c2c" sch="DataValues" tbl="ElectronicFiles" x="2402" y="680"/>
+    <TbGl bkCl="ffb22c2c" sch="DataValues" tbl="MultiAttributeSeries" x="1878" y="1102"/>
+    <TbGl bkCl="ffb22c2c" sch="DataValues" tbl="MultiAttributeSeriesValues" x="2308" y="1093"/>
+    <TbGl bkCl="ffb22c2c" sch="DataValues" tbl="NumericValues" x="2403" y="50"/>
+    <TbGl bkCl="ffb22c2c" sch="DataValues" tbl="CategoricalValues" x="2375" y="374"/>
+    <TbGl bkCl="ffb22c2c" sch="DataValues" tbl="TimeSeries" x="2022" y="759"/>
+    <TbGl bkCl="ffb22c2c" sch="DataValues" tbl="TimeSeriesValues" x="2386" y="905"/>
+    <TbGl bkCl="ffb22c2c" sch="DataValues" tbl="SeasonalNumericValues" x="2312" y="169"/>
     <TbGl bkCl="ff999999" sch="ResourceStruct" tbl="WaMDaMVersion" x="16" y="256"/>
-    <FkGl bkCl="ff000000" childEdge="WEST" nm="DataValues.DescriptorValues.fk_DescriptorValues_ValuesMapper" parentEdge="NORTH" positioner="TwoLineUserLinkPositioner">
+    <TbGl bkCl="ffb22c2c" sch="DataValues" tbl="FreeText" x="2463" y="526"/>
+    <FkGl bkCl="ff000000" childEdge="WEST" nm="DataValues.CategoricalValues.fk_CategoricalValues_ValuesMapper" parentEdge="NORTH" positioner="TwoLineUserLinkPositioner">
       <positionableLines>
-        <positionableLine lineRole="PARENT_LINE" x1="2108" x2="2108" y1="610" y2="496"/>
-        <positionableLine lineRole="CHILD_LINE" x1="2193" x2="2112" y1="492" y2="492"/>
+        <positionableLine lineRole="PARENT_LINE" x1="2134" x2="2134" y1="591" y2="455"/>
+        <positionableLine lineRole="CHILD_LINE" x1="2375" x2="2138" y1="451" y2="451"/>
       </positionableLines>
     </FkGl>
-    <FkGl bkCl="ff000000" childEdge="WEST" nm="DataValues.ElectronicFiles.fk_ElectronicFiles_ValuesMapper" parentEdge="EAST" positioner="OneLineUserLinkPositioner">
+    <FkGl bkCl="ff000000" childEdge="WEST" nm="DataValues.ElectronicFiles.fk_ElectronicFiles_ValuesMapper" parentEdge="SOUTH" positioner="TwoLineUserLinkPositioner">
       <positionableLines>
-        <positionableLine lineRole="SINGLE_LINE" x1="2184" x2="2342" y1="640" y2="640"/>
+        <positionableLine lineRole="PARENT_LINE" x1="2205" x2="2205" y1="651" y2="711"/>
+        <positionableLine lineRole="CHILD_LINE" x1="2402" x2="2209" y1="715" y2="715"/>
       </positionableLines>
     </FkGl>
-    <FkGl bkCl="ff000000" childEdge="NORTH" nm="DataValues.MultiAttributeSeries.fk_MultiAttributeSeries_DataValuesMapper" parentEdge="SOUTH" positioner="OneLineUserLinkPositioner">
+    <FkGl bkCl="ff000000" childEdge="WEST" nm="DataValues.FreeText.fk_FreeText_ValuesMapper" parentEdge="NORTH" positioner="TwoLineUserLinkPositioner">
       <positionableLines>
-        <positionableLine lineRole="SINGLE_LINE" x1="1990" x2="1990" y1="670" y2="1074"/>
+        <positionableLine lineRole="PARENT_LINE" x1="2202" x2="2202" y1="591" y2="560"/>
+        <positionableLine lineRole="CHILD_LINE" x1="2463" x2="2206" y1="556" y2="556"/>
+      </positionableLines>
+    </FkGl>
+    <FkGl bkCl="ff000000" childEdge="NORTH" nm="DataValues.MultiAttributeSeries.fk_MultiAttributeSeries_Mappings" parentEdge="EAST" positioner="TwoLineUserLinkPositioner">
+      <positionableLines>
+        <positionableLine lineRole="PARENT_LINE" x1="1251" x2="1906" y1="650" y2="650"/>
+        <positionableLine lineRole="CHILD_LINE" x1="1910" x2="1910" y1="1102" y2="654"/>
       </positionableLines>
     </FkGl>
     <FkGl bkCl="ff000000" childEdge="NORTH" nm="DataValues.MultiAttributeSeries.fk_MultiAttributeSeries_ValuesMapper" parentEdge="SOUTH" positioner="OneLineUserLinkPositioner">
       <positionableLines>
-        <positionableLine lineRole="SINGLE_LINE" x1="1937" x2="1937" y1="670" y2="1074"/>
+        <positionableLine lineRole="SINGLE_LINE" x1="2003" x2="2003" y1="651" y2="1102"/>
       </positionableLines>
     </FkGl>
     <FkGl bkCl="ff000000" childEdge="WEST" nm="DataValues.MultiAttributeSeriesValues.fk_MultiAttributeSeriesValues_MultiAttributeSeries" parentEdge="EAST" positioner="OneLineUserLinkPositioner">
       <positionableLines>
-        <positionableLine lineRole="SINGLE_LINE" x1="2230" x2="2303" y1="1135" y2="1135"/>
+        <positionableLine lineRole="SINGLE_LINE" x1="2239" x2="2308" y1="1160" y2="1160"/>
       </positionableLines>
     </FkGl>
     <FkGl bkCl="ff000000" childEdge="WEST" nm="DataValues.NumericValues.fk_NumericValues_ValuesMapper" parentEdge="NORTH" positioner="TwoLineUserLinkPositioner">
       <positionableLines>
-        <positionableLine lineRole="PARENT_LINE" x1="1998" x2="1998" y1="610" y2="135"/>
-        <positionableLine lineRole="CHILD_LINE" x1="2114" x2="2002" y1="131" y2="131"/>
+        <positionableLine lineRole="PARENT_LINE" x1="2048" x2="2048" y1="591" y2="104"/>
+        <positionableLine lineRole="CHILD_LINE" x1="2403" x2="2052" y1="100" y2="100"/>
       </positionableLines>
     </FkGl>
     <FkGl bkCl="ff000000" childEdge="WEST" nm="DataValues.SeasonalNumericValues.fk_SeasonalNumericValues_ValuesMapper" parentEdge="NORTH" positioner="TwoLineUserLinkPositioner">
       <positionableLines>
-        <positionableLine lineRole="PARENT_LINE" x1="2053" x2="2053" y1="610" y2="317"/>
-        <positionableLine lineRole="CHILD_LINE" x1="2117" x2="2057" y1="313" y2="313"/>
+        <positionableLine lineRole="PARENT_LINE" x1="2096" x2="2096" y1="591" y2="266"/>
+        <positionableLine lineRole="CHILD_LINE" x1="2312" x2="2100" y1="262" y2="262"/>
       </positionableLines>
     </FkGl>
     <FkGl bkCl="ff000000" childEdge="NORTH" nm="DataValues.TimeSeries.fk_TimeSeries_ValuesMapper" parentEdge="SOUTH" positioner="OneLineUserLinkPositioner">
       <positionableLines>
-        <positionableLine lineRole="SINGLE_LINE" x1="2102" x2="2102" y1="670" y2="737"/>
+        <positionableLine lineRole="SINGLE_LINE" x1="2134" x2="2134" y1="651" y2="759"/>
       </positionableLines>
     </FkGl>
     <FkGl bkCl="ff000000" childEdge="WEST" nm="DataValues.TimeSeriesValues.fk_TimeSeriesValues_TimeSeries" parentEdge="EAST" positioner="OneLineUserLinkPositioner">
       <positionableLines>
-        <positionableLine lineRole="SINGLE_LINE" x1="2309" x2="2387" y1="933" y2="933"/>
+        <positionableLine lineRole="SINGLE_LINE" x1="2309" x2="2386" y1="955" y2="955"/>
       </positionableLines>
     </FkGl>
     <FkGl bkCl="ff000000" childEdge="EAST" nm="Metadata.Methods.fk_Methods_People" parentEdge="WEST" positioner="OneLineUserLinkPositioner">
@@ -1490,75 +1554,75 @@
     </FkGl>
     <FkGl bkCl="ff000000" childEdge="SOUTH" nm="NetScen.Connections.fk_Connections_Instances" parentEdge="NORTH" positioner="OneLineUserLinkPositioner">
       <positionableLines>
-        <positionableLine lineRole="SINGLE_LINE" x1="937" x2="937" y1="323" y2="172"/>
+        <positionableLine lineRole="SINGLE_LINE" x1="938" x2="938" y1="301" y2="172"/>
       </positionableLines>
     </FkGl>
     <FkGl bkCl="ff000000" childEdge="SOUTH" nm="NetScen.Connections.fk_Connections_Instances_Link" parentEdge="NORTH" positioner="OneLineUserLinkPositioner">
       <positionableLines>
-        <positionableLine lineRole="SINGLE_LINE" x1="975" x2="975" y1="323" y2="172"/>
+        <positionableLine lineRole="SINGLE_LINE" x1="976" x2="976" y1="301" y2="172"/>
       </positionableLines>
     </FkGl>
     <FkGl bkCl="ff000000" childEdge="SOUTH" nm="NetScen.Connections.fk_Connections_Instances_startNode" parentEdge="NORTH" positioner="OneLineUserLinkPositioner">
       <positionableLines>
-        <positionableLine lineRole="SINGLE_LINE" x1="1006" x2="1006" y1="323" y2="172"/>
+        <positionableLine lineRole="SINGLE_LINE" x1="1007" x2="1007" y1="301" y2="172"/>
       </positionableLines>
     </FkGl>
     <FkGl bkCl="ff000000" childEdge="EAST" nm="NetScen.Instances.fk_Instances_InstanceCategories" parentEdge="SOUTH" positioner="TwoLineUserLinkPositioner">
       <positionableLines>
-        <positionableLine lineRole="PARENT_LINE" x1="1265" x2="1265" y1="286" y2="404"/>
-        <positionableLine lineRole="CHILD_LINE" x1="1152" x2="1261" y1="408" y2="408"/>
+        <positionableLine lineRole="PARENT_LINE" x1="1265" x2="1265" y1="286" y2="382"/>
+        <positionableLine lineRole="CHILD_LINE" x1="1153" x2="1261" y1="386" y2="386"/>
       </positionableLines>
     </FkGl>
     <FkGl bkCl="ff000000" childEdge="WEST" nm="NetScen.Mappings.fk_Mappings_Attributes" parentEdge="EAST" positioner="OneLineUserLinkPositioner">
       <positionableLines>
-        <positionableLine lineRole="SINGLE_LINE" x1="788" x2="1022" y1="636" y2="636"/>
+        <positionableLine lineRole="SINGLE_LINE" x1="787" x2="1022" y1="623" y2="623"/>
       </positionableLines>
     </FkGl>
     <FkGl bkCl="ff000000" childEdge="WEST" nm="NetScen.Mappings.fk_Mappings_Instances" parentEdge="SOUTH" positioner="TwoLineUserLinkPositioner">
       <positionableLines>
-        <positionableLine lineRole="PARENT_LINE" x1="947" x2="947" y1="509" y2="582"/>
-        <positionableLine lineRole="CHILD_LINE" x1="1022" x2="951" y1="586" y2="586"/>
+        <positionableLine lineRole="PARENT_LINE" x1="948" x2="948" y1="487" y2="576"/>
+        <positionableLine lineRole="CHILD_LINE" x1="1022" x2="952" y1="580" y2="580"/>
       </positionableLines>
     </FkGl>
     <FkGl bkCl="ff000000" childEdge="SOUTH" nm="NetScen.Mappings.fk_Mappings_Methods" parentEdge="NORTH" positioner="OneLineUserLinkPositioner">
       <positionableLines>
-        <positionableLine lineRole="SINGLE_LINE" x1="1060" x2="1060" y1="812" y2="701"/>
+        <positionableLine lineRole="SINGLE_LINE" x1="1064" x2="1064" y1="811" y2="695"/>
       </positionableLines>
     </FkGl>
     <FkGl bkCl="ff000000" childEdge="EAST" nm="NetScen.Mappings.fk_Mappings_Sources" parentEdge="NORTH" positioner="TwoLineUserLinkPositioner">
       <positionableLines>
-        <positionableLine lineRole="PARENT_LINE" x1="1684" x2="1684" y1="839" y2="672"/>
-        <positionableLine lineRole="CHILD_LINE" x1="1251" x2="1680" y1="668" y2="668"/>
+        <positionableLine lineRole="PARENT_LINE" x1="1684" x2="1684" y1="839" y2="680"/>
+        <positionableLine lineRole="CHILD_LINE" x1="1251" x2="1680" y1="676" y2="676"/>
       </positionableLines>
     </FkGl>
     <FkGl bkCl="ff000000" childEdge="EAST" nm="NetScen.Mappings.fk_Mappings_ValuesMapper" parentEdge="WEST" positioner="OneLineUserLinkPositioner">
       <positionableLines>
-        <positionableLine lineRole="SINGLE_LINE" x1="1883" x2="1251" y1="632" y2="632"/>
+        <positionableLine lineRole="SINGLE_LINE" x1="1933" x2="1251" y1="617" y2="617"/>
       </positionableLines>
     </FkGl>
     <FkGl bkCl="ff000000" childEdge="NORTH" nm="NetScen.ScenarioMappings.fk_ScenarioMapping_Scenarios" parentEdge="SOUTH" positioner="OneLineUserLinkPositioner">
       <positionableLines>
-        <positionableLine lineRole="SINGLE_LINE" x1="1593" x2="1593" y1="455" y2="507"/>
+        <positionableLine lineRole="SINGLE_LINE" x1="1600" x2="1600" y1="450" y2="504"/>
       </positionableLines>
     </FkGl>
     <FkGl bkCl="ff000000" childEdge="WEST" nm="NetScen.ScenarioMappings.fk_ScenarioMappings_Mappings" parentEdge="EAST" positioner="OneLineUserLinkPositioner">
       <positionableLines>
-        <positionableLine lineRole="SINGLE_LINE" x1="1251" x2="1459" y1="587" y2="587"/>
+        <positionableLine lineRole="SINGLE_LINE" x1="1251" x2="1461" y1="549" y2="549"/>
       </positionableLines>
     </FkGl>
     <FkGl bkCl="ff000000" childEdge="NORTH" nm="NetScen.Scenarios.fk_Scenarios_MasterNetworks" parentEdge="SOUTH" positioner="OneLineUserLinkPositioner">
       <positionableLines>
-        <positionableLine lineRole="SINGLE_LINE" x1="1594" x2="1594" y1="197" y2="248"/>
+        <positionableLine lineRole="SINGLE_LINE" x1="1594" x2="1594" y1="197" y2="243"/>
       </positionableLines>
     </FkGl>
     <FkGl bkCl="ff000000" childEdge="WEST" nm="ResourceStruct.Attributes.fk_Attributes_ObjectTypes" parentEdge="EAST" positioner="OneLineUserLinkPositioner">
       <positionableLines>
-        <positionableLine lineRole="SINGLE_LINE" x1="368" x2="488" y1="645" y2="645"/>
+        <positionableLine lineRole="SINGLE_LINE" x1="368" x2="487" y1="645" y2="645"/>
       </positionableLines>
     </FkGl>
     <FkGl bkCl="ff000000" childEdge="NORTH" nm="ResourceStruct.Attributes.fk_ObjectAttributes_AttributeCategory" parentEdge="SOUTH" positioner="OneLineUserLinkPositioner">
       <positionableLines>
-        <positionableLine lineRole="SINGLE_LINE" x1="628" x2="628" y1="474" y2="546"/>
+        <positionableLine lineRole="SINGLE_LINE" x1="628" x2="628" y1="474" y2="545"/>
       </positionableLines>
     </FkGl>
     <FkGl bkCl="ff000000" childEdge="SOUTH" nm="ResourceStruct.ObjectTypes.fk_ObjectTypes_Datasets" parentEdge="NORTH" positioner="OneLineUserLinkPositioner">
@@ -1573,15 +1637,15 @@
     </FkGl>
     <FkGl bkCl="ff000000" childEdge="EAST" nm="ResourceStruct.ResourceTypes.fk_ResourceTypes_Methods" parentEdge="WEST" positioner="OneLineUserLinkPositioner">
       <positionableLines>
-        <positionableLine lineRole="SINGLE_LINE" x1="903" x2="398" y1="900" y2="900"/>
+        <positionableLine lineRole="SINGLE_LINE" x1="903" x2="398" y1="899" y2="899"/>
       </positionableLines>
     </FkGl>
     <Notes/>
     <Zones>
-      <Zone bkCl="ffffd8b2" h="1003" nm="Metadata: Define contextual descriptions about resource, scenario, node, link, and values" w="515" x="858" y="726"/>
-      <Zone bkCl="ffe5ffb2" h="1003" nm="Networks &amp; Scenarios: Implement the resource structure in space through nodes and links" w="710" x="857" y="14"/>
-      <Zone bkCl="ffb2e5ff" h="842" nm="Resource Structure: Define the types of required or used data in a resource" w="656" x="15" y="332"/>
-      <Zone bkCl="ffffb2b2" h="889" nm="Values: Store numeric, descriptor, file, time series, and multi attribute values" w="1228" x="1860" y="13"/>
+      <Zone bkCl="ffffd8b2" h="1003" nm="Metadata: Define contextual descriptions about resource, scenario, node, link, and values" w="515" x="859" y="726"/>
+      <Zone bkCl="ffe5ffb2" h="1003" nm="Networks &amp; Scenarios: Implement the resource structure in space through nodes and links" w="710" x="858" y="16"/>
+      <Zone bkCl="ffb2e5ff" h="842" nm="Resource Structure: Define the types of required or used data in a resource" w="656" x="15" y="331"/>
+      <Zone bkCl="ffffb2b2" h="889" nm="Values: Store numeric, categorical, file, time series, and multi attribute values" w="1228" x="1862" y="13"/>
     </Zones>
   </Dgm>
   <Dgm nm="02_WaMDaM_WCVs">
@@ -1608,50 +1672,38 @@
     </DiaProps>
     <TbGl bkCl="ff2c85b2" sch="ResourceStruct" tbl="ObjectTypes" x="22" y="587"/>
     <TbGl bkCl="ff2c85b2" sch="ResourceStruct" tbl="ResourceTypes" x="21" y="1009"/>
-    <TbGl bkCl="ff85b22c" sch="NetScen" tbl="Mappings" x="956" y="648"/>
+    <TbGl bkCl="ff85b22c" sch="NetScen" tbl="Mappings" x="972" y="636"/>
     <TbGl bkCl="ff85b22c" sch="NetScen" tbl="MasterNetworks" x="1146" y="169"/>
-    <TbGl bkCl="ff85b22c" sch="NetScen" tbl="Scenarios" x="1183" y="339"/>
+    <TbGl bkCl="ff85b22c" sch="NetScen" tbl="Scenarios" x="1191" y="339"/>
     <TbGl bkCl="ffb22c2c" sch="DataValues" tbl="ValuesMapper" x="1424" y="652"/>
     <TbGl bkCl="ffb26f2c" sch="Metadata" tbl="People" x="986" y="896"/>
     <TbGl bkCl="ffb26f2c" sch="Metadata" tbl="Sources" x="1213" y="922"/>
-    <TbGl bkCl="ff422cb2" sch="CVs" tbl="CV_SpatialReference" x="1159" y="32"/>
-    <TbGl bkCl="ff422cb2" sch="CVs" tbl="CV_Units" x="475" y="830"/>
+    <TbGl bkCl="ff422cb2" sch="CVs" tbl="CV_Units" x="464" y="842"/>
     <TbGl bkCl="ffb26f2c" sch="Metadata" tbl="Organizations" x="987" y="1110"/>
     <TbGl bkCl="ffb26f2c" sch="Metadata" tbl="Methods" x="743" y="895"/>
     <TbGl bkCl="ff422cb2" sch="CVs" tbl="CV_ObjectType" x="137" y="888"/>
-    <TbGl bkCl="ffb22c2c" sch="DataValues" tbl="NumericValues" x="1655" y="79"/>
-    <TbGl bkCl="ffb22c2c" sch="DataValues" tbl="DescriptorValues" x="1703" y="392"/>
+    <TbGl bkCl="ffb22c2c" sch="DataValues" tbl="NumericValues" x="1667" y="66"/>
+    <TbGl bkCl="ffb22c2c" sch="DataValues" tbl="CategoricalValues" x="1703" y="392"/>
     <TbGl bkCl="ffb22c2c" sch="DataValues" tbl="ElectronicFiles" x="1716" y="607"/>
-    <TbGl bkCl="ffb22c2c" sch="DataValues" tbl="TimeSeries" x="1630" y="775"/>
+    <TbGl bkCl="ffb22c2c" sch="DataValues" tbl="TimeSeries" x="1636" y="775"/>
     <TbGl bkCl="ffb22c2c" sch="DataValues" tbl="TimeSeriesValues" x="1966" y="822"/>
     <TbGl bkCl="ffb22c2c" sch="DataValues" tbl="MultiAttributeSeries" x="1590" y="1054"/>
-    <TbGl bkCl="ffb22c2c" sch="DataValues" tbl="MultiAttributeSeriesValues" x="1927" y="1033"/>
+    <TbGl bkCl="ffb22c2c" sch="DataValues" tbl="MultiAttributeSeriesValues" x="1927" y="1045"/>
     <TbGl bkCl="ff422cb2" sch="CVs" tbl="CV_AttributeName" x="201" y="762"/>
-    <TbGl bkCl="ff422cb2" sch="CVs" tbl="CV_DescriptorValues" x="2013" y="379"/>
-    <TbGl bkCl="ff422cb2" sch="CVs" tbl="CV_MethodType" x="742" y="1105"/>
     <TbGl bkCl="ff2c85b2" sch="ResourceStruct" tbl="AttributeCategories" x="306" y="340"/>
     <TbGl bkCl="ff2c85b2" sch="ResourceStruct" tbl="ObjectCategories" x="13" y="337"/>
-    <TbGl bkCl="ff422cb2" sch="CVs" tbl="CV_ElevationDatum" x="755" y="38"/>
-    <TbGl bkCl="ff422cb2" sch="CVs" tbl="CV_AttributeDataType" x="436" y="441"/>
-    <TbGl bkCl="ff85b22c" sch="NetScen" tbl="ScenarioMappings" x="1139" y="552"/>
-    <TbGl bkCl="ff85b22c" sch="NetScen" tbl="Instances" x="778" y="478"/>
+    <TbGl bkCl="ff85b22c" sch="NetScen" tbl="ScenarioMappings" x="1159" y="539"/>
+    <TbGl bkCl="ff85b22c" sch="NetScen" tbl="Instances" x="773" y="470"/>
     <TbGl bkCl="ff85b22c" sch="NetScen" tbl="Connections" x="762" y="153"/>
-    <TbGl bkCl="ff422cb2" sch="CVs" tbl="CV_InstanceName" x="616" y="310"/>
-    <TbGl bkCl="ff422cb2" sch="CVs" tbl="CV_ElectronicFileFormat" x="1990" y="616"/>
+    <TbGl bkCl="ff422cb2" sch="CVs" tbl="CV_InstanceName" x="626" y="329"/>
     <TbGl bkCl="ff2c85b2" sch="ResourceStruct" tbl="Attributes" x="406" y="578"/>
     <TbGl bkCl="ff85b22c" sch="NetScen" tbl="InstanceCategories" x="934" y="302"/>
-    <TbGl bkCl="ff422cb2" sch="CVs" tbl="CV_ObjectTypology" x="184" y="440"/>
-    <TbGl bkCl="ff422cb2" sch="CVs" tbl="CV_SeasonName" x="2010" y="203"/>
-    <TbGl bkCl="ffb22c2c" sch="DataValues" tbl="SeasonalNumericValues" x="1646" y="196"/>
-    <FkGl bkCl="ff000000" childEdge="EAST" nm="DataValues.DescriptorValues.fk_DescriptorValues_CV_DescriptorValues" parentEdge="WEST" positioner="OneLineUserLinkPositioner">
+    <TbGl bkCl="ffb22c2c" sch="DataValues" tbl="SeasonalNumericValues" x="1655" y="190"/>
+    <TbGl bkCl="ffb22c2c" sch="DataValues" tbl="FreeText" x="1721" y="499"/>
+    <FkGl bkCl="ff000000" childEdge="WEST" nm="DataValues.CategoricalValues.fk_CategoricalValues_ValuesMapper" parentEdge="NORTH" positioner="TwoLineUserLinkPositioner">
       <positionableLines>
-        <positionableLine lineRole="SINGLE_LINE" x1="2013" x2="1950" y1="434" y2="434"/>
-      </positionableLines>
-    </FkGl>
-    <FkGl bkCl="ff000000" childEdge="WEST" nm="DataValues.DescriptorValues.fk_DescriptorValues_ValuesMapper" parentEdge="NORTH" positioner="TwoLineUserLinkPositioner">
-      <positionableLines>
-        <positionableLine lineRole="PARENT_LINE" x1="1645" x2="1645" y1="652" y2="431"/>
-        <positionableLine lineRole="CHILD_LINE" x1="1703" x2="1649" y1="427" y2="427"/>
+        <positionableLine lineRole="PARENT_LINE" x1="1615" x2="1615" y1="652" y2="431"/>
+        <positionableLine lineRole="CHILD_LINE" x1="1703" x2="1619" y1="427" y2="427"/>
       </positionableLines>
     </FkGl>
     <FkGl bkCl="ff000000" childEdge="WEST" nm="DataValues.ElectronicFiles.fk_ElectronicFiles_ValuesMapper" parentEdge="EAST" positioner="OneLineUserLinkPositioner">
@@ -1659,21 +1711,23 @@
         <positionableLine lineRole="SINGLE_LINE" x1="1650" x2="1716" y1="673" y2="673"/>
       </positionableLines>
     </FkGl>
-    <FkGl bkCl="ff000000" childEdge="EAST" nm="DataValues.ElectronicFiles.fk_Files_CV_FileFormat" parentEdge="WEST" positioner="OneLineUserLinkPositioner">
+    <FkGl bkCl="ff000000" childEdge="WEST" nm="DataValues.FreeText.fk_FreeText_ValuesMapper" parentEdge="NORTH" positioner="TwoLineUserLinkPositioner">
       <positionableLines>
-        <positionableLine lineRole="SINGLE_LINE" x1="1990" x2="1948" y1="663" y2="663"/>
+        <positionableLine lineRole="PARENT_LINE" x1="1645" x2="1645" y1="652" y2="555"/>
+        <positionableLine lineRole="CHILD_LINE" x1="1721" x2="1649" y1="551" y2="551"/>
       </positionableLines>
     </FkGl>
-    <FkGl bkCl="ff000000" childEdge="WEST" nm="DataValues.MultiAttributeSeries.fk_MultiAttributeSeries_DataValuesMapper" parentEdge="SOUTH" positioner="TwoLineUserLinkPositioner">
+    <FkGl bkCl="ff000000" childEdge="WEST" nm="DataValues.MultiAttributeSeries.fk_MultiAttributeSeries_Mappings" parentEdge="EAST" positioner="ThreeLineUserLinkPositioner">
       <positionableLines>
-        <positionableLine lineRole="PARENT_LINE" x1="1525" x2="1525" y1="697" y2="1073"/>
-        <positionableLine lineRole="CHILD_LINE" x1="1590" x2="1529" y1="1077" y2="1077"/>
+        <positionableLine lineRole="PARENT_LINE" x1="1158" x2="1470" y1="715" y2="715"/>
+        <positionableLine lineRole="CHILD_LINE" x1="1590" x2="1478" y1="1106" y2="1106"/>
+        <positionableLine lineRole="MIDDLE_LINE" x1="1474" x2="1474" y1="1102" y2="719"/>
       </positionableLines>
     </FkGl>
     <FkGl bkCl="ff000000" childEdge="WEST" nm="DataValues.MultiAttributeSeries.fk_MultiAttributeSeries_ValuesMapper" parentEdge="SOUTH" positioner="TwoLineUserLinkPositioner">
       <positionableLines>
-        <positionableLine lineRole="PARENT_LINE" x1="1475" x2="1475" y1="697" y2="1106"/>
-        <positionableLine lineRole="CHILD_LINE" x1="1590" x2="1479" y1="1110" y2="1110"/>
+        <positionableLine lineRole="PARENT_LINE" x1="1525" x2="1525" y1="697" y2="1074"/>
+        <positionableLine lineRole="CHILD_LINE" x1="1590" x2="1529" y1="1078" y2="1078"/>
       </positionableLines>
     </FkGl>
     <FkGl bkCl="ff000000" childEdge="WEST" nm="DataValues.MultiAttributeSeriesValues.fk_MultiAttributeSeriesValues_MultiAttributeSeries" parentEdge="EAST" positioner="OneLineUserLinkPositioner">
@@ -1683,40 +1737,30 @@
     </FkGl>
     <FkGl bkCl="ff000000" childEdge="WEST" nm="DataValues.NumericValues.fk_NumericValues_ValuesMapper" parentEdge="NORTH" positioner="TwoLineUserLinkPositioner">
       <positionableLines>
-        <positionableLine lineRole="PARENT_LINE" x1="1518" x2="1518" y1="652" y2="118"/>
-        <positionableLine lineRole="CHILD_LINE" x1="1655" x2="1522" y1="114" y2="114"/>
-      </positionableLines>
-    </FkGl>
-    <FkGl bkCl="ff000000" childEdge="EAST" nm="DataValues.SeasonalNumericValues.fk_SeasonalNumericValues_CV_SeasonName" parentEdge="WEST" positioner="OneLineUserLinkPositioner">
-      <positionableLines>
-        <positionableLine lineRole="SINGLE_LINE" x1="2010" x2="1944" y1="256" y2="256"/>
+        <positionableLine lineRole="PARENT_LINE" x1="1518" x2="1518" y1="652" y2="105"/>
+        <positionableLine lineRole="CHILD_LINE" x1="1667" x2="1522" y1="101" y2="101"/>
       </positionableLines>
     </FkGl>
     <FkGl bkCl="ff000000" childEdge="WEST" nm="DataValues.SeasonalNumericValues.fk_SeasonalNumericValues_ValuesMapper" parentEdge="NORTH" positioner="TwoLineUserLinkPositioner">
       <positionableLines>
-        <positionableLine lineRole="PARENT_LINE" x1="1577" x2="1577" y1="652" y2="294"/>
-        <positionableLine lineRole="CHILD_LINE" x1="1646" x2="1581" y1="290" y2="290"/>
+        <positionableLine lineRole="PARENT_LINE" x1="1577" x2="1577" y1="652" y2="288"/>
+        <positionableLine lineRole="CHILD_LINE" x1="1655" x2="1581" y1="284" y2="284"/>
       </positionableLines>
     </FkGl>
     <FkGl bkCl="ff000000" childEdge="WEST" nm="DataValues.TimeSeries.fk_TimeSeries_CV_Units" parentEdge="EAST" positioner="OneLineUserLinkPositioner">
       <positionableLines>
-        <positionableLine lineRole="SINGLE_LINE" x1="697" x2="1630" y1="873" y2="873"/>
+        <positionableLine lineRole="SINGLE_LINE" x1="686" x2="1636" y1="885" y2="885"/>
       </positionableLines>
     </FkGl>
     <FkGl bkCl="ff000000" childEdge="WEST" nm="DataValues.TimeSeries.fk_TimeSeries_ValuesMapper" parentEdge="SOUTH" positioner="TwoLineUserLinkPositioner">
       <positionableLines>
         <positionableLine lineRole="PARENT_LINE" x1="1565" x2="1565" y1="697" y2="813"/>
-        <positionableLine lineRole="CHILD_LINE" x1="1630" x2="1569" y1="817" y2="817"/>
+        <positionableLine lineRole="CHILD_LINE" x1="1636" x2="1569" y1="817" y2="817"/>
       </positionableLines>
     </FkGl>
     <FkGl bkCl="ff000000" childEdge="WEST" nm="DataValues.TimeSeriesValues.fk_TimeSeriesValues_TimeSeries" parentEdge="EAST" positioner="OneLineUserLinkPositioner">
       <positionableLines>
-        <positionableLine lineRole="SINGLE_LINE" x1="1864" x2="1966" y1="862" y2="862"/>
-      </positionableLines>
-    </FkGl>
-    <FkGl bkCl="ff000000" childEdge="SOUTH" nm="Metadata.Methods.fk_Methods_CV_MethodType" parentEdge="NORTH" positioner="OneLineUserLinkPositioner">
-      <positionableLines>
-        <positionableLine lineRole="SINGLE_LINE" x1="845" x2="845" y1="1105" y2="1030"/>
+        <positionableLine lineRole="SINGLE_LINE" x1="1870" x2="1966" y1="862" y2="862"/>
       </positionableLines>
     </FkGl>
     <FkGl bkCl="ff000000" childEdge="EAST" nm="Metadata.Methods.fk_Methods_People" parentEdge="WEST" positioner="OneLineUserLinkPositioner">
@@ -1736,83 +1780,73 @@
     </FkGl>
     <FkGl bkCl="ff000000" childEdge="SOUTH" nm="NetScen.Connections.fk_Connections_Instances" parentEdge="NORTH" positioner="OneLineUserLinkPositioner">
       <positionableLines>
-        <positionableLine lineRole="SINGLE_LINE" x1="927" x2="927" y1="478" y2="243"/>
+        <positionableLine lineRole="SINGLE_LINE" x1="922" x2="922" y1="470" y2="243"/>
       </positionableLines>
     </FkGl>
     <FkGl bkCl="ff000000" childEdge="SOUTH" nm="NetScen.Connections.fk_Connections_Instances_Link" parentEdge="NORTH" positioner="OneLineUserLinkPositioner">
       <positionableLines>
-        <positionableLine lineRole="SINGLE_LINE" x1="850" x2="850" y1="478" y2="243"/>
+        <positionableLine lineRole="SINGLE_LINE" x1="845" x2="845" y1="470" y2="243"/>
       </positionableLines>
     </FkGl>
     <FkGl bkCl="ff000000" childEdge="SOUTH" nm="NetScen.Connections.fk_Connections_Instances_startNode" parentEdge="NORTH" positioner="OneLineUserLinkPositioner">
       <positionableLines>
-        <positionableLine lineRole="SINGLE_LINE" x1="890" x2="890" y1="478" y2="243"/>
+        <positionableLine lineRole="SINGLE_LINE" x1="885" x2="885" y1="470" y2="243"/>
       </positionableLines>
     </FkGl>
     <FkGl bkCl="ff000000" childEdge="NORTH" nm="NetScen.Instances.fk_Instances_CV_InstanceName" parentEdge="SOUTH" positioner="OneLineUserLinkPositioner">
       <positionableLines>
-        <positionableLine lineRole="SINGLE_LINE" x1="809" x2="809" y1="415" y2="478"/>
+        <positionableLine lineRole="SINGLE_LINE" x1="843" x2="843" y1="434" y2="470"/>
       </positionableLines>
     </FkGl>
     <FkGl bkCl="ff000000" childEdge="NORTH" nm="NetScen.Instances.fk_Instances_InstanceCategories" parentEdge="SOUTH" positioner="OneLineUserLinkPositioner">
       <positionableLines>
-        <positionableLine lineRole="SINGLE_LINE" x1="970" x2="970" y1="377" y2="478"/>
+        <positionableLine lineRole="SINGLE_LINE" x1="970" x2="970" y1="377" y2="470"/>
       </positionableLines>
     </FkGl>
     <FkGl bkCl="ff000000" childEdge="WEST" nm="NetScen.Mappings.fk_Mappings_Attributes" parentEdge="EAST" positioner="OneLineUserLinkPositioner">
       <positionableLines>
-        <positionableLine lineRole="SINGLE_LINE" x1="630" x2="956" y1="690" y2="690"/>
+        <positionableLine lineRole="SINGLE_LINE" x1="647" x2="972" y1="690" y2="690"/>
       </positionableLines>
     </FkGl>
-    <FkGl bkCl="ff000000" childEdge="NORTH" nm="NetScen.Mappings.fk_Mappings_Instances" parentEdge="SOUTH" positioner="OneLineUserLinkPositioner">
+    <FkGl bkCl="ff000000" childEdge="WEST" nm="NetScen.Mappings.fk_Mappings_Instances" parentEdge="SOUTH" positioner="TwoLineUserLinkPositioner">
       <positionableLines>
-        <positionableLine lineRole="SINGLE_LINE" x1="976" x2="976" y1="613" y2="648"/>
+        <positionableLine lineRole="PARENT_LINE" x1="938" x2="938" y1="605" y2="637"/>
+        <positionableLine lineRole="CHILD_LINE" x1="972" x2="942" y1="641" y2="641"/>
       </positionableLines>
     </FkGl>
     <FkGl bkCl="ff000000" childEdge="WEST" nm="NetScen.Mappings.fk_Mappings_Methods" parentEdge="NORTH" positioner="TwoLineUserLinkPositioner">
       <positionableLines>
-        <positionableLine lineRole="PARENT_LINE" x1="885" x2="885" y1="895" y2="739"/>
-        <positionableLine lineRole="CHILD_LINE" x1="956" x2="889" y1="735" y2="735"/>
+        <positionableLine lineRole="PARENT_LINE" x1="885" x2="885" y1="895" y2="727"/>
+        <positionableLine lineRole="CHILD_LINE" x1="972" x2="889" y1="723" y2="723"/>
       </positionableLines>
     </FkGl>
     <FkGl bkCl="ff000000" childEdge="EAST" nm="NetScen.Mappings.fk_Mappings_Sources" parentEdge="NORTH" positioner="TwoLineUserLinkPositioner">
       <positionableLines>
-        <positionableLine lineRole="PARENT_LINE" x1="1284" x2="1284" y1="922" y2="732"/>
-        <positionableLine lineRole="CHILD_LINE" x1="1142" x2="1280" y1="728" y2="728"/>
+        <positionableLine lineRole="PARENT_LINE" x1="1284" x2="1284" y1="922" y2="746"/>
+        <positionableLine lineRole="CHILD_LINE" x1="1158" x2="1280" y1="742" y2="742"/>
       </positionableLines>
     </FkGl>
     <FkGl bkCl="ff000000" childEdge="EAST" nm="NetScen.Mappings.fk_Mappings_ValuesMapper" parentEdge="WEST" positioner="OneLineUserLinkPositioner">
       <positionableLines>
-        <positionableLine lineRole="SINGLE_LINE" x1="1424" x2="1142" y1="686" y2="686"/>
-      </positionableLines>
-    </FkGl>
-    <FkGl bkCl="ff000000" childEdge="NORTH" nm="NetScen.MasterNetworks.fk_MasterNetworks_CV_SpatialReference" parentEdge="SOUTH" positioner="OneLineUserLinkPositioner">
-      <positionableLines>
-        <positionableLine lineRole="SINGLE_LINE" x1="1279" x2="1279" y1="137" y2="169"/>
-      </positionableLines>
-    </FkGl>
-    <FkGl bkCl="ff000000" childEdge="WEST" nm="NetScen.MasterNetworks.fk_MasterNetworks_CV_VerticalDatum" parentEdge="EAST" positioner="ThreeLineUserLinkPositioner">
-      <positionableLines>
-        <positionableLine lineRole="PARENT_LINE" x1="977" x2="1091" y1="73" y2="73"/>
-        <positionableLine lineRole="CHILD_LINE" x1="1146" x2="1099" y1="213" y2="213"/>
-        <positionableLine lineRole="MIDDLE_LINE" x1="1095" x2="1095" y1="209" y2="77"/>
+        <positionableLine lineRole="SINGLE_LINE" x1="1424" x2="1158" y1="686" y2="686"/>
       </positionableLines>
     </FkGl>
     <FkGl bkCl="ff000000" childEdge="NORTH" nm="NetScen.ScenarioMappings.fk_ScenarioMapping_Scenarios" parentEdge="SOUTH" positioner="OneLineUserLinkPositioner">
       <positionableLines>
-        <positionableLine lineRole="SINGLE_LINE" x1="1272" x2="1272" y1="489" y2="552"/>
+        <positionableLine lineRole="SINGLE_LINE" x1="1280" x2="1280" y1="489" y2="539"/>
       </positionableLines>
     </FkGl>
     <FkGl bkCl="ff000000" childEdge="WEST" nm="NetScen.ScenarioMappings.fk_ScenarioMappings_Mappings" parentEdge="NORTH" positioner="TwoLineUserLinkPositioner">
       <positionableLines>
-        <positionableLine lineRole="PARENT_LINE" x1="1068" x2="1068" y1="648" y2="599"/>
-        <positionableLine lineRole="CHILD_LINE" x1="1139" x2="1072" y1="595" y2="595"/>
+        <positionableLine lineRole="PARENT_LINE" x1="1084" x2="1084" y1="636" y2="586"/>
+        <positionableLine lineRole="CHILD_LINE" x1="1159" x2="1088" y1="582" y2="582"/>
       </positionableLines>
     </FkGl>
-    <FkGl bkCl="ff000000" childEdge="WEST" nm="NetScen.Scenarios.fk_Scenarios_CV_Units" parentEdge="NORTH" positioner="TwoLineUserLinkPositioner">
+    <FkGl bkCl="ff000000" childEdge="WEST" nm="NetScen.Scenarios.fk_Scenarios_CV_Units" parentEdge="EAST" positioner="ThreeLineUserLinkPositioner">
       <positionableLines>
-        <positionableLine lineRole="PARENT_LINE" x1="671" x2="671" y1="830" y2="454"/>
-        <positionableLine lineRole="CHILD_LINE" x1="1183" x2="675" y1="450" y2="450"/>
+        <positionableLine lineRole="PARENT_LINE" x1="686" x2="700" y1="924" y2="924"/>
+        <positionableLine lineRole="CHILD_LINE" x1="1191" x2="708" y1="442" y2="442"/>
+        <positionableLine lineRole="MIDDLE_LINE" x1="704" x2="704" y1="446" y2="920"/>
       </positionableLines>
     </FkGl>
     <FkGl bkCl="ff000000" childEdge="NORTH" nm="NetScen.Scenarios.fk_Scenarios_MasterNetworks" parentEdge="SOUTH" positioner="OneLineUserLinkPositioner">
@@ -1826,14 +1860,9 @@
         <positionableLine lineRole="CHILD_LINE" x1="406" x2="369" y1="710" y2="710"/>
       </positionableLines>
     </FkGl>
-    <FkGl bkCl="ff000000" childEdge="NORTH" nm="ResourceStruct.Attributes.fk_Attributes_CV_AttributeType" parentEdge="SOUTH" positioner="OneLineUserLinkPositioner">
-      <positionableLines>
-        <positionableLine lineRole="SINGLE_LINE" x1="529" x2="529" y1="546" y2="578"/>
-      </positionableLines>
-    </FkGl>
     <FkGl bkCl="ff000000" childEdge="SOUTH" nm="ResourceStruct.Attributes.fk_Attributes_CV_Units" parentEdge="NORTH" positioner="OneLineUserLinkPositioner">
       <positionableLines>
-        <positionableLine lineRole="SINGLE_LINE" x1="529" x2="529" y1="830" y2="758"/>
+        <positionableLine lineRole="SINGLE_LINE" x1="518" x2="518" y1="842" y2="788"/>
       </positionableLines>
     </FkGl>
     <FkGl bkCl="ff000000" childEdge="WEST" nm="ResourceStruct.Attributes.fk_Attributes_ObjectTypes" parentEdge="EAST" positioner="OneLineUserLinkPositioner">
@@ -1844,11 +1873,6 @@
     <FkGl bkCl="ff000000" childEdge="NORTH" nm="ResourceStruct.Attributes.fk_ObjectAttributes_AttributeCategory" parentEdge="SOUTH" positioner="OneLineUserLinkPositioner">
       <positionableLines>
         <positionableLine lineRole="SINGLE_LINE" x1="427" x2="427" y1="415" y2="578"/>
-      </positionableLines>
-    </FkGl>
-    <FkGl bkCl="ff000000" childEdge="NORTH" nm="ResourceStruct.ObjectTypes.fk_ObjectTypes_CV_ObjectTopology" parentEdge="SOUTH" positioner="OneLineUserLinkPositioner">
-      <positionableLines>
-        <positionableLine lineRole="SINGLE_LINE" x1="218" x2="218" y1="545" y2="587"/>
       </positionableLines>
     </FkGl>
     <FkGl bkCl="ff000000" childEdge="SOUTH" nm="ResourceStruct.ObjectTypes.fk_ObjectTypes_CV_ObjectTypes" parentEdge="NORTH" positioner="OneLineUserLinkPositioner">
@@ -1876,7 +1900,7 @@
       <Zone bkCl="ffffd8b2" h="728" nm="Metadata: Define contextual descriptions about resource, scenario, node, link, and values" w="450" x="719" y="774"/>
       <Zone bkCl="ffe5ffb2" h="725" nm="Networks &amp; Scenarios: Implement the resource structure in space through nodes and links" w="767" x="718" y="8"/>
       <Zone bkCl="ffb2e5ff" h="709" nm="Resource Structure: Define the types of required or used data in a resource" w="824" x="12" y="296"/>
-      <Zone bkCl="ffffb2b2" h="865" nm="Values: Store numeric, descriptor, file, time series, and multi attribute values" w="1220" x="1445" y="4"/>
+      <Zone bkCl="ffffb2b2" h="865" nm="Values: Store numeric, categorical, file, time series, and multi attribute values" w="1220" x="1445" y="4"/>
     </Zones>
   </Dgm>
   <Dgm nm="03_CVs">
@@ -1905,20 +1929,20 @@
     <TbGl bkCl="ff422cb2" sch="CVs" tbl="CV_AttributeName" x="329" y="468"/>
     <TbGl bkCl="ff422cb2" sch="CVs" tbl="CV_ObjectType" x="58" y="321"/>
     <TbGl bkCl="ff422cb2" sch="CVs" tbl="CV_MethodType" x="58" y="58"/>
-    <TbGl bkCl="ff422cb2" sch="CVs" tbl="CV_SpatialReference" x="331" y="190"/>
-    <TbGl bkCl="ff422cb2" sch="CVs" tbl="CV_DescriptorValues" x="639" y="206"/>
+    <TbGl bkCl="ff422cb2" sch="CVs" tbl="CV_SpatialReference" x="331" y="186"/>
+    <TbGl bkCl="ff422cb2" sch="CVs" tbl="CV_Categorical" x="642" y="231"/>
     <TbGl bkCl="ff422cb2" sch="CVs" tbl="CV_Units" x="637" y="60"/>
     <TbGl bkCl="ff422cb2" sch="CVs" tbl="CV_ElevationDatum" x="643" y="471"/>
     <TbGl bkCl="ff422cb2" sch="CVs" tbl="CV_InstanceName" x="328" y="318"/>
     <TbGl bkCl="ff422cb2" sch="CVs" tbl="CV_ObjectTypology" x="58" y="191"/>
-    <TbGl bkCl="ff422cb2" sch="CVs" tbl="CV_ElectronicFileFormat" x="323" y="64"/>
-    <TbGl bkCl="ff422cb2" sch="CVs" tbl="CV_AggregationStatistic" x="639" y="349"/>
+    <TbGl bkCl="ff422cb2" sch="CVs" tbl="CV_ElectronicFileFormat" x="323" y="56"/>
+    <TbGl bkCl="ff422cb2" sch="CVs" tbl="CV_AggregationStatistic" x="640" y="362"/>
     <Notes/>
     <Zones>
       <Zone bkCl="ffbfb2ff" h="923" nm="Controlled Vocabularies (CVs):  Register your dataset terms against master vocabularies @ http://vocabulary.wamdam.org" w="570" x="9" y="16"/>
     </Zones>
   </Dgm>
-  <RnmMgr NxRnmId="1281">
+  <RnmMgr NxRnmId="1291">
     <RnmCh ObjCls="Schema" ParCls="Database" ParNme="newDb" SupCls="" SupNme="">
       <Rnm id="656" nNm="Core" oNm="WaMDaMCore"/>
       <Rnm id="307" nNm="WaMDaMCore" oNm="TestApril"/>
@@ -2031,7 +2055,7 @@
       <Rnm id="41" nNm="TextDescriptorControlled" oNm="TextDescriptor"/>
       <Rnm id="39" nNm="TextDescriptor" oNm="Text"/>
     </RnmCh>
-    <RnmCh ObjCls="Column" ParCls="Table" ParNme="CV_DescriptorValues" SupCls="Schema" SupNme="WaMDaM">
+    <RnmCh ObjCls="Column" ParCls="Table" ParNme="CV_Categorical" SupCls="Schema" SupNme="WaMDaM">
       <Rnm id="42" nNm="TextControlledID" oNm="TextID"/>
       <Rnm id="40" nNm="TextID" oNm="Id"/>
     </RnmCh>
@@ -2334,7 +2358,7 @@
       <Rnm id="177" nNm="ScenarioNodeInstanceAttributeData" oNm="ScenarioData"/>
       <Rnm id="147" nNm="ScenarioData" oNm="ScenarioData_dup"/>
     </RnmCh>
-    <RnmCh ObjCls="Column" ParCls="Table" ParNme="CV_DescriptorValues" SupCls="Schema" SupNme="TestApril">
+    <RnmCh ObjCls="Column" ParCls="Table" ParNme="CV_Categorical" SupCls="Schema" SupNme="TestApril">
       <Rnm id="148" nNm="Definition" oNm="Description"/>
     </RnmCh>
     <RnmCh ObjCls="Column" ParCls="Table" ParNme="CV_ObjectType" SupCls="Schema" SupNme="TestApril">
@@ -2384,7 +2408,7 @@
       <Rnm id="193" nNm="AttributeDataID" oNm="AttributeScenarioDataID"/>
       <Rnm id="161" nNm="AttributeScenarioDataID" oNm="InstanceAttributeScenarioDataID"/>
     </RnmCh>
-    <RnmCh ObjCls="Column" ParCls="Table" ParNme="CV_DescriptorValues" SupCls="Schema" SupNme="TestApril">
+    <RnmCh ObjCls="Column" ParCls="Table" ParNme="CV_Categorical" SupCls="Schema" SupNme="TestApril">
       <Rnm id="213" nNm="AttributeMetaDataID" oNm="AttributeDataID"/>
       <Rnm id="192" nNm="AttributeDataID" oNm="AttributeScenarioDataID"/>
       <Rnm id="162" nNm="AttributeScenarioDataID" oNm="InstanceAttributeScenarioDataID"/>
@@ -2540,7 +2564,7 @@
     <RnmCh ObjCls="Column" ParCls="Table" ParNme="DualValues" SupCls="Schema" SupNme="TestApril">
       <Rnm id="254" nNm="AttributeDataStorageID" oNm="AttributeDataValueID"/>
     </RnmCh>
-    <RnmCh ObjCls="Column" ParCls="Table" ParNme="CV_DescriptorValues" SupCls="Schema" SupNme="TestApril">
+    <RnmCh ObjCls="Column" ParCls="Table" ParNme="CV_Categorical" SupCls="Schema" SupNme="TestApril">
       <Rnm id="255" nNm="AttributeDataStorageID" oNm="AttributeDataValueID"/>
     </RnmCh>
     <RnmCh ObjCls="Column" ParCls="Table" ParNme="ElectronicFiles" SupCls="Schema" SupNme="TestApril">
@@ -3295,7 +3319,7 @@
     <RnmCh ObjCls="Column" ParCls="Table" ParNme="TimeSeries" SupCls="Schema" SupNme="Storage">
       <Rnm id="589" nNm="DerivedFromTimeSeriesID" oNm="TimeSeries_TimeSeriesID"/>
     </RnmCh>
-    <RnmCh ObjCls="Column" ParCls="Table" ParNme="CV_DescriptorValues" SupCls="Schema" SupNme="Storage">
+    <RnmCh ObjCls="Column" ParCls="Table" ParNme="CV_Categorical" SupCls="Schema" SupNme="Storage">
       <Rnm id="590" nNm="TextValueControlledCV" oNm="TextValueControlled"/>
     </RnmCh>
     <RnmCh ObjCls="Table" ParCls="Schema" ParNme="DataValues" SupCls="" SupNme="">
@@ -3528,7 +3552,7 @@
       <Rnm id="858" nNm="RuleVariableOrder" oNm="FunctionVariableOrder"/>
       <Rnm id="696" nNm="FunctionVariableOrder" oNm="VariableOrder"/>
     </RnmCh>
-    <RnmCh ObjCls="Column" ParCls="Table" ParNme="CV_DescriptorValues" SupCls="Schema" SupNme="Storage">
+    <RnmCh ObjCls="Column" ParCls="Table" ParNme="CV_Categorical" SupCls="Schema" SupNme="Storage">
       <Rnm id="697" nNm="ControlledAttributeName" oNm="ControlledAttribute"/>
     </RnmCh>
     <RnmCh ObjCls="Column" ParCls="Table" ParNme="ControlledText " SupCls="Schema" SupNme="CVs">
@@ -3541,6 +3565,7 @@
       <Rnm id="700" nNm="Organizations" oNm="Organization"/>
     </RnmCh>
     <RnmCh ObjCls="Table" ParCls="Schema" ParNme="CVs" SupCls="" SupNme="">
+      <Rnm id="1288" nNm="CV_Categorical" oNm="CV_DescriptorValues"/>
       <Rnm id="1246" nNm="CV_DescriptorValues" oNm="CV_DescriptorValue"/>
       <Rnm id="1200" nNm="CV_DescriptorValue" oNm="CV_TextControlledValue"/>
       <Rnm id="1100" nNm="CV_TextControlledValue" oNm="TextControlledValues"/>
@@ -3845,12 +3870,13 @@
       <Rnm id="804" nNm="SceanrioMetadataID" oNm="Id"/>
     </RnmCh>
     <RnmCh ObjCls="Table" ParCls="Schema" ParNme="DataValues" SupCls="" SupNme="">
+      <Rnm id="1281" nNm="CategoricalValues" oNm="DescriptorValues"/>
       <Rnm id="1199" nNm="DescriptorValues" oNm="DescriptorValue"/>
       <Rnm id="1197" nNm="DescriptorValue" oNm="TextControlled"/>
       <Rnm id="861" nNm="TextControlled" oNm="ControlledText"/>
       <Rnm id="805" nNm="ControlledText" oNm="TextDescriptorControlledData"/>
     </RnmCh>
-    <RnmCh ObjCls="Column" ParCls="Table" ParNme="CV_DescriptorValues" SupCls="Schema" SupNme="Storage">
+    <RnmCh ObjCls="Column" ParCls="Table" ParNme="CV_Categorical" SupCls="Schema" SupNme="Storage">
       <Rnm id="806" nNm="ControlledTextID" oNm="TextControlledID"/>
     </RnmCh>
     <RnmCh ObjCls="Table" ParCls="Schema" ParNme="DataValues" SupCls="" SupNme="">
@@ -3873,7 +3899,7 @@
       <Rnm id="1198" nNm="NumericValues" oNm="Parameters"/>
       <Rnm id="814" nNm="Parameters" oNm="ParameterData"/>
     </RnmCh>
-    <RnmCh ObjCls="Column" ParCls="Table" ParNme="CV_DescriptorValues" SupCls="Schema" SupNme="CVs">
+    <RnmCh ObjCls="Column" ParCls="Table" ParNme="CV_Categorical" SupCls="Schema" SupNme="CVs">
       <Rnm id="1184" nNm="Name" oNm="TextControlledValueCV"/>
       <Rnm id="1143" nNm="TextControlledValueCV" oNm="TextControlledValueCVID"/>
       <Rnm id="1037" nNm="TextControlledValueCVID" oNm="TextControlledValueID"/>
@@ -3882,7 +3908,7 @@
       <Rnm id="824" nNm="ControlledTextValuedID" oNm="TextValueControlledID"/>
       <Rnm id="817" nNm="TextValueControlledID" oNm="TextValueControlledCVID"/>
     </RnmCh>
-    <RnmCh ObjCls="Column" ParCls="Table" ParNme="DescriptorValues" SupCls="Schema" SupNme="Storage">
+    <RnmCh ObjCls="Column" ParCls="Table" ParNme="CategoricalValues" SupCls="Schema" SupNme="Storage">
       <Rnm id="926" nNm="TextControlledValueCVID" oNm="TextControlledValueID"/>
       <Rnm id="860" nNm="TextControlledValueID" oNm="ControlledTextValueID"/>
       <Rnm id="837" nNm="ControlledTextValueID" oNm="ControlledTextValuedID"/>
@@ -3899,19 +3925,19 @@
       <Rnm id="875" nNm="MappingID" oNm="MetadataMappingID"/>
       <Rnm id="823" nNm="MetadataMappingID" oNm="MetadataID"/>
     </RnmCh>
-    <RnmCh ObjCls="Column" ParCls="Table" ParNme="CV_DescriptorValues" SupCls="Schema" SupNme="CVs">
+    <RnmCh ObjCls="Column" ParCls="Table" ParNme="CV_Categorical" SupCls="Schema" SupNme="CVs">
       <Rnm id="1185" nNm="Term" oNm="TextControlledValueCVTerm"/>
       <Rnm id="1142" nNm="TextControlledValueCVTerm" oNm="TextControlledValueCV"/>
       <Rnm id="1042" nNm="TextControlledValueCV" oNm="TextControlledValue"/>
       <Rnm id="864" nNm="TextControlledValue" oNm="ControlledTextValue"/>
       <Rnm id="825" nNm="ControlledTextValue" oNm="TextValueControlled"/>
     </RnmCh>
-    <RnmCh ObjCls="Column" ParCls="Table" ParNme="CV_DescriptorValues" SupCls="Schema" SupNme="CVs">
+    <RnmCh ObjCls="Column" ParCls="Table" ParNme="CV_Categorical" SupCls="Schema" SupNme="CVs">
       <Rnm id="1191" nNm="AttributeName" oNm="TextControlledAttribute"/>
       <Rnm id="865" nNm="TextControlledAttribute" oNm="ControlledTextAttribute"/>
       <Rnm id="826" nNm="ControlledTextAttribute" oNm="TextAttributeName"/>
     </RnmCh>
-    <RnmCh ObjCls="Column" ParCls="Table" ParNme="CV_DescriptorValues" SupCls="Schema" SupNme="CVs">
+    <RnmCh ObjCls="Column" ParCls="Table" ParNme="CV_Categorical" SupCls="Schema" SupNme="CVs">
       <Rnm id="1186" nNm="Definition" oNm="ValueDefinition"/>
       <Rnm id="827" nNm="ValueDefinition" oNm="Definition"/>
     </RnmCh>
@@ -3966,7 +3992,7 @@
       <Rnm id="946" nNm="ParentAttributeCategoryID" oNm="ParentCommonAttributeCategoryID"/>
       <Rnm id="851" nNm="ParentCommonAttributeCategoryID" oNm="ParentAttributeCategoryID"/>
     </RnmCh>
-    <RnmCh ObjCls="Column" ParCls="Table" ParNme="DescriptorValues" SupCls="Schema" SupNme="Storage">
+    <RnmCh ObjCls="Column" ParCls="Table" ParNme="CategoricalValues" SupCls="Schema" SupNme="Storage">
       <Rnm id="859" nNm="TextControlledID" oNm="ControlledTextID"/>
     </RnmCh>
     <RnmCh ObjCls="Column" ParCls="Table" ParNme="CV_DualValueMeaning" SupCls="Schema" SupNme="CVs">
@@ -4107,7 +4133,7 @@
     <RnmCh ObjCls="Column" ParCls="Table" ParNme="SeasonalParameters" SupCls="Schema" SupNme="DataValues">
       <Rnm id="959" nNm="DataValuesMapperID" oNm="DataStorageID"/>
     </RnmCh>
-    <RnmCh ObjCls="Column" ParCls="Table" ParNme="DescriptorValues" SupCls="Schema" SupNme="DataValues">
+    <RnmCh ObjCls="Column" ParCls="Table" ParNme="CategoricalValues" SupCls="Schema" SupNme="DataValues">
       <Rnm id="1261" nNm="ValuesMapperID" oNm="DataValuesMapperID"/>
       <Rnm id="960" nNm="DataValuesMapperID" oNm="DataStorageID"/>
     </RnmCh>
@@ -4426,7 +4452,8 @@
       <Rnm id="1207" nNm="DualValueMeaningCV" oNm="BooleanValueMeaningCV"/>
       <Rnm id="1138" nNm="BooleanValueMeaningCV" oNm="BinaryValue"/>
     </RnmCh>
-    <RnmCh ObjCls="Column" ParCls="Table" ParNme="DescriptorValues" SupCls="Schema" SupNme="DataValues">
+    <RnmCh ObjCls="Column" ParCls="Table" ParNme="CategoricalValues" SupCls="Schema" SupNme="DataValues">
+      <Rnm id="1284" nNm="CategoricalValueCV" oNm="DescriptorValueCV"/>
       <Rnm id="1224" nNm="DescriptorValueCV" oNm="DescriptorValuesCV"/>
       <Rnm id="1223" nNm="DescriptorValuesCV" oNm="TextControlledValueCV"/>
       <Rnm id="1144" nNm="TextControlledValueCV" oNm="TextControlledValueCVID"/>
@@ -4489,7 +4516,8 @@
     <RnmCh ObjCls="Column" ParCls="Table" ParNme="ElectronicFiles" SupCls="Schema" SupNme="DataValues">
       <Rnm id="1216" nNm="ElectronicFileName" oNm="FileName"/>
     </RnmCh>
-    <RnmCh ObjCls="Column" ParCls="Table" ParNme="DescriptorValues" SupCls="Schema" SupNme="DataValues">
+    <RnmCh ObjCls="Column" ParCls="Table" ParNme="CategoricalValues" SupCls="Schema" SupNme="DataValues">
+      <Rnm id="1282" nNm="CategoricalValueID" oNm="DescriptorValueID"/>
       <Rnm id="1222" nNm="DescriptorValueID" oNm="TextControlledID"/>
     </RnmCh>
     <RnmCh ObjCls="Column" ParCls="Table" ParNme="SeasonalNumericValues" SupCls="Schema" SupNme="DataValues">
@@ -4570,6 +4598,22 @@
     <RnmCh ObjCls="Column" ParCls="Table" ParNme="ResourceTypes" SupCls="Schema" SupNme="ResourceStruct">
       <Rnm id="1279" nNm="ResourceTypeAcronym" oNm="ResourceAcronym"/>
     </RnmCh>
+    <RnmCh ObjCls="Column" ParCls="Table" ParNme="CategoricalValues" SupCls="Schema" SupNme="DataValues">
+      <Rnm id="1285" nNm="CategoricalValue" oNm="DescriptoCategorical"/>
+      <Rnm id="1283" nNm="DescriptoCategorical" oNm="DescriptorValue"/>
+    </RnmCh>
+    <RnmCh ObjCls="Column" ParCls="Table" ParNme="FreeText" SupCls="Schema" SupNme="DataValues">
+      <Rnm id="1286" nNm="FreeTextID" oNm="CategoricalValueID"/>
+    </RnmCh>
+    <RnmCh ObjCls="Column" ParCls="Table" ParNme="FreeText" SupCls="Schema" SupNme="DataValues">
+      <Rnm id="1287" nNm="FreeTextValue" oNm="CategoricalValue"/>
+    </RnmCh>
+    <RnmCh ObjCls="Column" ParCls="Table" ParNme="CV_Units" SupCls="Schema" SupNme="CVs">
+      <Rnm id="1289" nNm="LinearFactor" oNm="ConversionFactor"/>
+    </RnmCh>
+    <RnmCh ObjCls="Column" ParCls="Table" ParNme="CV_Units" SupCls="Schema" SupNme="CVs">
+      <Rnm id="1290" nNm="ConstantFactor" oNm="ConversionRelation"/>
+    </RnmCh>
   </RnmMgr>
   <DbDocOptionMgr>
     <BasicOptionMgr>
@@ -4587,21 +4631,20 @@
     </BasicOptionMgr>
   </DbDocOptionMgr>
   <OpenEditors>
-    <OpenEditor ClsNm="Diagram" fqn="null.02_WaMDaM_WCVs" selected="0"/>
     <OpenEditor ClsNm="Diagram" fqn="null.01_WaMDaM" selected="1"/>
-    <OpenEditor ClsNm="Diagram" fqn="null.03_CVs" selected="0"/>
   </OpenEditors>
   <TreePaths>
     <TreePath/>
     <TreePath>/Schemas (5)</TreePath>
     <TreePath>/Schemas (5)/CVs</TreePath>
     <TreePath>/Schemas (5)/CVs/Tables (13)</TreePath>
-    <TreePath>/Schemas (5)/DataValues</TreePath>
+    <TreePath>/Schemas (5)/CVs/Tables (13)/CV_Units</TreePath>
     <TreePath>/Diagrams (3)</TreePath>
     <TreePath>/Diagrams (3)/01_WaMDaM</TreePath>
     <TreePath>/Diagrams (3)/01_WaMDaM/Notes (0)</TreePath>
     <TreePath>/Diagrams (3)/01_WaMDaM/Zones (4)</TreePath>
     <TreePath>/Diagrams (3)/02_WaMDaM_WCVs</TreePath>
+    <TreePath>/Diagrams (3)/02_WaMDaM_WCVs/Notes (0)</TreePath>
     <TreePath>/Diagrams (3)/02_WaMDaM_WCVs/Zones (4)</TreePath>
     <TreePath>/Diagrams (3)/03_CVs</TreePath>
     <TreePath>/Diagrams (3)/03_CVs/Zones (1)</TreePath>
