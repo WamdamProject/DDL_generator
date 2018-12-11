@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><Db flnm="WaMDaM_DBWrench_Schema_v1.04" nm="WaMDaM_v1.04" ver="1.3.4">
+<?xml version="1.0" encoding="UTF-8"?><Db flnm="WaMDaM_DBWrench_Schema_v1.05" nm="WaMDaM_v1.05" ver="1.3.4">
   <VerLbl/>
   <VerNotes/>
   <DefTblOpts/>
@@ -281,6 +281,33 @@
         <DT arr="0" ds="VarChar" en="" id="12" ln="255" sc="null" sg="1" un="0"/>
         <Cm>A link to the source vocabulary from which the term was derived.
 </Cm>
+      </Cl>
+      <UniqueConstraints/>
+      <SchTrHis/>
+    </Tbl>
+    <Tbl UsSo="1" nm="CV_ResourceType">
+      <Cm>Boolean, parameters, SeasonalParameter, TextFree, ControlledText, Files, TimeSeries, Column, Dummay, Network, MultiColumnArray</Cm>
+      <TblOpts/>
+      <Pk ClNs="Name" nm="pkCV_ResourceType"/>
+      <Cl au="0" df="" nm="Name" nu="0">
+        <DT arr="0" ds="VarChar" en="" id="12" ln="255" sc="null" sg="1" un="0"/>
+        <Cm>The human readable version of the vocabulary term. May be the same as the term.</Cm>
+      </Cl>
+      <Cl au="0" df="" nm="Term" nu="0">
+        <DT arr="0" ds="VarChar" en="" id="12" ln="255" sc="null" sg="1" un="0"/>
+        <Cm>The machine version of the vocabulary term (no spaces). May be the same as the term.</Cm>
+      </Cl>
+      <Cl au="0" df="" nm="Definition" nu="1">
+        <DT arr="0" ds="VarChar" en="" id="12" ln="5000" sc="null" sg="1" un="0"/>
+        <Cm>Definition of vocabulary term</Cm>
+      </Cl>
+      <Cl au="0" df="" nm="Category" nu="1">
+        <DT arr="0" ds="VarChar" en="" id="12" ln="255" sc="null" sg="1" un="0"/>
+        <Cm>A category within which the term falls.	</Cm>
+      </Cl>
+      <Cl au="0" df="" nm="SourceVocabularyURI" nu="1">
+        <DT arr="0" ds="VarChar" en="" id="12" ln="255" sc="null" sg="1" un="0"/>
+        <Cm>A link to the source vocabulary from which the term was derived.	</Cm>
       </Cl>
       <UniqueConstraints/>
       <SchTrHis/>
@@ -1404,6 +1431,10 @@ The default is 1. It takes values like 1000000 for a million. </Cm>
         <DT arr="0" ds="VarChar" en="" id="12" ln="255" sc="null" sg="1" un="0"/>
         <Cm>Text name acronym like WEAP, WASH</Cm>
       </Cl>
+      <Cl au="0" df="" nm="ResourceTypeCV" nu="1">
+        <DT arr="0" ds="VarChar" en="" id="12" ln="255" sc="null" sg="1" un="0"/>
+        <Cm>The human readable version of the vocabulary term. May be the same as the term.</Cm>
+      </Cl>
       <Cl au="0" df="" nm="MethodID" nu="0">
         <DT arr="0" ds="Integer" en="" id="4" ln="null" sc="null" sg="1" un="0"/>
         <Cm>Foreigh key identifier for a method the resource types uses (e.g., WEAP simulation method)</Cm>
@@ -1412,6 +1443,11 @@ The default is 1. It takes values like 1000000 for a million. </Cm>
         <DT arr="0" ds="Text" en="" id="703" ln="null" sc="null" sg="1" un="0"/>
         <Cm>Full text description of the resource type </Cm>
       </Cl>
+      <Fk deAc="3" nm="fk_ResourceTypes_CV_ResourceTypes" prLkCl="Name" upAc="3">
+        <PrTb mn="0" nm="CV_ResourceType" oe="1" sch="CVs" zr="1"/>
+        <CdTb mn="1" nm="ResourceTypes" oe="0" sch="ResourceStruct" zr="1"/>
+        <ClPr cdCl="ResourceTypeCV" prCl="Name"/>
+      </Fk>
       <Fk deAc="3" nm="fk_ResourceTypes_Methods" prLkCl="MethodID" upAc="3">
         <PrTb mn="0" nm="Methods" oe="1" sch="Metadata" zr="0"/>
         <CdTb mn="1" nm="ResourceTypes" oe="0" sch="ResourceStruct" zr="1"/>
@@ -1680,7 +1716,7 @@ The default is 1. It takes values like 1000000 for a million. </Cm>
     <TbGl bkCl="ffb26f2c" sch="Metadata" tbl="Sources" x="1213" y="922"/>
     <TbGl bkCl="ff422cb2" sch="CVs" tbl="CV_Units" x="464" y="842"/>
     <TbGl bkCl="ffb26f2c" sch="Metadata" tbl="Organizations" x="987" y="1110"/>
-    <TbGl bkCl="ffb26f2c" sch="Metadata" tbl="Methods" x="743" y="895"/>
+    <TbGl bkCl="ffb26f2c" sch="Metadata" tbl="Methods" x="743" y="909"/>
     <TbGl bkCl="ff422cb2" sch="CVs" tbl="CV_ObjectType" x="137" y="888"/>
     <TbGl bkCl="ffb22c2c" sch="DataValues" tbl="NumericValues" x="1667" y="66"/>
     <TbGl bkCl="ffb22c2c" sch="DataValues" tbl="CategoricalValues" x="1703" y="392"/>
@@ -1700,6 +1736,7 @@ The default is 1. It takes values like 1000000 for a million. </Cm>
     <TbGl bkCl="ff85b22c" sch="NetScen" tbl="InstanceCategories" x="934" y="302"/>
     <TbGl bkCl="ffb22c2c" sch="DataValues" tbl="SeasonalNumericValues" x="1655" y="190"/>
     <TbGl bkCl="ffb22c2c" sch="DataValues" tbl="FreeText" x="1721" y="499"/>
+    <TbGl bkCl="ff6666ff" sch="CVs" tbl="CV_ResourceType" x="422" y="1055"/>
     <FkGl bkCl="ff000000" childEdge="WEST" nm="DataValues.CategoricalValues.fk_CategoricalValues_ValuesMapper" parentEdge="NORTH" positioner="TwoLineUserLinkPositioner">
       <positionableLines>
         <positionableLine lineRole="PARENT_LINE" x1="1615" x2="1615" y1="652" y2="431"/>
@@ -1816,7 +1853,7 @@ The default is 1. It takes values like 1000000 for a million. </Cm>
     </FkGl>
     <FkGl bkCl="ff000000" childEdge="WEST" nm="NetScen.Mappings.fk_Mappings_Methods" parentEdge="NORTH" positioner="TwoLineUserLinkPositioner">
       <positionableLines>
-        <positionableLine lineRole="PARENT_LINE" x1="885" x2="885" y1="895" y2="727"/>
+        <positionableLine lineRole="PARENT_LINE" x1="885" x2="885" y1="909" y2="727"/>
         <positionableLine lineRole="CHILD_LINE" x1="972" x2="889" y1="723" y2="723"/>
       </positionableLines>
     </FkGl>
@@ -1882,7 +1919,7 @@ The default is 1. It takes values like 1000000 for a million. </Cm>
     </FkGl>
     <FkGl bkCl="ff000000" childEdge="SOUTH" nm="ResourceStruct.ObjectTypes.fk_ObjectTypes_Datasets" parentEdge="NORTH" positioner="OneLineUserLinkPositioner">
       <positionableLines>
-        <positionableLine lineRole="SINGLE_LINE" x1="126" x2="126" y1="1009" y2="737"/>
+        <positionableLine lineRole="SINGLE_LINE" x1="97" x2="97" y1="1009" y2="737"/>
       </positionableLines>
     </FkGl>
     <FkGl bkCl="ff000000" childEdge="NORTH" nm="ResourceStruct.ObjectTypes.fk_ObjectTypes_ObjectCategory" parentEdge="SOUTH" positioner="OneLineUserLinkPositioner">
@@ -1890,16 +1927,21 @@ The default is 1. It takes values like 1000000 for a million. </Cm>
         <positionableLine lineRole="SINGLE_LINE" x1="128" x2="128" y1="412" y2="587"/>
       </positionableLines>
     </FkGl>
+    <FkGl bkCl="ff000000" childEdge="EAST" nm="ResourceStruct.ResourceTypes.fk_ResourceTypes_CV_ResourceTypes" parentEdge="WEST" positioner="OneLineUserLinkPositioner">
+      <positionableLines>
+        <positionableLine lineRole="SINGLE_LINE" x1="422" x2="282" y1="1073" y2="1073"/>
+      </positionableLines>
+    </FkGl>
     <FkGl bkCl="ff000000" childEdge="EAST" nm="ResourceStruct.ResourceTypes.fk_ResourceTypes_Methods" parentEdge="WEST" positioner="OneLineUserLinkPositioner">
       <positionableLines>
-        <positionableLine lineRole="SINGLE_LINE" x1="743" x2="282" y1="1013" y2="1013"/>
+        <positionableLine lineRole="SINGLE_LINE" x1="743" x2="282" y1="1045" y2="1045"/>
       </positionableLines>
     </FkGl>
     <Notes/>
     <Zones>
       <Zone bkCl="ffffd8b2" h="728" nm="Metadata: Define contextual descriptions about resource, scenario, node, link, and values" w="450" x="719" y="774"/>
       <Zone bkCl="ffe5ffb2" h="725" nm="Networks &amp; Scenarios: Implement the resource structure in space through nodes and links" w="767" x="718" y="8"/>
-      <Zone bkCl="ffb2e5ff" h="709" nm="Resource Structure: Define the types of required or used data in a resource" w="824" x="12" y="296"/>
+      <Zone bkCl="ffb2e5ff" h="709" nm="Resource Structure: Define the types of required or used data in a resource" w="875" x="12" y="294"/>
       <Zone bkCl="ffffb2b2" h="865" nm="Values: Store numeric, categorical, file, time series, and multi attribute values" w="1220" x="1445" y="4"/>
     </Zones>
   </Dgm>
@@ -1925,24 +1967,25 @@ The default is 1. It takes values like 1000000 for a million. </Cm>
       <DbTableRectangleFill>HeaderFooterFill</DbTableRectangleFill>
       <svg path=""/>
     </DiaProps>
-    <TbGl bkCl="ff422cb2" sch="CVs" tbl="CV_AttributeDataType" x="54" y="470"/>
-    <TbGl bkCl="ff422cb2" sch="CVs" tbl="CV_AttributeName" x="329" y="468"/>
+    <TbGl bkCl="ff422cb2" sch="CVs" tbl="CV_AttributeDataType" x="64" y="437"/>
+    <TbGl bkCl="ff422cb2" sch="CVs" tbl="CV_AttributeName" x="328" y="455"/>
     <TbGl bkCl="ff422cb2" sch="CVs" tbl="CV_ObjectType" x="58" y="321"/>
     <TbGl bkCl="ff422cb2" sch="CVs" tbl="CV_MethodType" x="58" y="58"/>
-    <TbGl bkCl="ff422cb2" sch="CVs" tbl="CV_SpatialReference" x="331" y="186"/>
+    <TbGl bkCl="ff422cb2" sch="CVs" tbl="CV_SpatialReference" x="332" y="202"/>
     <TbGl bkCl="ff422cb2" sch="CVs" tbl="CV_Categorical" x="642" y="231"/>
     <TbGl bkCl="ff422cb2" sch="CVs" tbl="CV_Units" x="637" y="60"/>
     <TbGl bkCl="ff422cb2" sch="CVs" tbl="CV_ElevationDatum" x="643" y="471"/>
-    <TbGl bkCl="ff422cb2" sch="CVs" tbl="CV_InstanceName" x="328" y="318"/>
+    <TbGl bkCl="ff422cb2" sch="CVs" tbl="CV_InstanceName" x="331" y="326"/>
     <TbGl bkCl="ff422cb2" sch="CVs" tbl="CV_ObjectTypology" x="58" y="191"/>
     <TbGl bkCl="ff422cb2" sch="CVs" tbl="CV_ElectronicFileFormat" x="323" y="56"/>
     <TbGl bkCl="ff422cb2" sch="CVs" tbl="CV_AggregationStatistic" x="640" y="362"/>
+    <TbGl bkCl="ff422cb2" sch="CVs" tbl="CV_ResourceType" x="69" y="555"/>
     <Notes/>
     <Zones>
-      <Zone bkCl="ffbfb2ff" h="923" nm="Controlled Vocabularies (CVs):  Register your dataset terms against master vocabularies @ http://vocabulary.wamdam.org" w="570" x="9" y="16"/>
+      <Zone bkCl="ffbfb2ff" h="923" nm="Controlled Vocabularies (CVs):  Register your dataset terms against master vocabularies @ http://vocabulary.wamdam.org" w="652" x="9" y="16"/>
     </Zones>
   </Dgm>
-  <RnmMgr NxRnmId="1291">
+  <RnmMgr NxRnmId="1293">
     <RnmCh ObjCls="Schema" ParCls="Database" ParNme="newDb" SupCls="" SupNme="">
       <Rnm id="656" nNm="Core" oNm="WaMDaMCore"/>
       <Rnm id="307" nNm="WaMDaMCore" oNm="TestApril"/>
@@ -4614,6 +4657,12 @@ The default is 1. It takes values like 1000000 for a million. </Cm>
     <RnmCh ObjCls="Column" ParCls="Table" ParNme="CV_Units" SupCls="Schema" SupNme="CVs">
       <Rnm id="1290" nNm="ConstantFactor" oNm="ConversionRelation"/>
     </RnmCh>
+    <RnmCh ObjCls="Column" ParCls="Table" ParNme="ResourceTypes" SupCls="Schema" SupNme="ResourceStruct">
+      <Rnm id="1291" nNm="ResourceTypeCV" oNm="Name"/>
+    </RnmCh>
+    <RnmCh ObjCls="Table" ParCls="Schema" ParNme="CVs" SupCls="" SupNme="">
+      <Rnm id="1292" nNm="CV_ResourceType" oNm="CV_ResourceTypes"/>
+    </RnmCh>
   </RnmMgr>
   <DbDocOptionMgr>
     <BasicOptionMgr>
@@ -4631,14 +4680,16 @@ The default is 1. It takes values like 1000000 for a million. </Cm>
     </BasicOptionMgr>
   </DbDocOptionMgr>
   <OpenEditors>
+    <OpenEditor ClsNm="Diagram" fqn="null.02_WaMDaM_WCVs" selected="0"/>
+    <OpenEditor ClsNm="Diagram" fqn="null.03_CVs" selected="0"/>
     <OpenEditor ClsNm="Diagram" fqn="null.01_WaMDaM" selected="1"/>
   </OpenEditors>
   <TreePaths>
     <TreePath/>
     <TreePath>/Schemas (5)</TreePath>
     <TreePath>/Schemas (5)/CVs</TreePath>
-    <TreePath>/Schemas (5)/CVs/Tables (13)</TreePath>
-    <TreePath>/Schemas (5)/CVs/Tables (13)/CV_Units</TreePath>
+    <TreePath>/Schemas (5)/CVs/Tables (14)</TreePath>
+    <TreePath>/Schemas (5)/CVs/Tables (14)/CV_ResourceType</TreePath>
     <TreePath>/Diagrams (3)</TreePath>
     <TreePath>/Diagrams (3)/01_WaMDaM</TreePath>
     <TreePath>/Diagrams (3)/01_WaMDaM/Notes (0)</TreePath>

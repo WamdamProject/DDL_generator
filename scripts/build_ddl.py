@@ -8,9 +8,9 @@ import translator
 import xml.etree.ElementTree as et
 from optparse import OptionParser
 
-input_file = 'WaMDaM_DBWrench_Schema_v1.04.xml'
+input_file = 'WaMDaM_DBWrench_Schema_v1.05.xml'
 use_schemas = True
-default_schema = 'WaMDaM_DBWrench_Schema_v1.04'
+default_schema = 'WaMDaM_DBWrench_Schema_v1.05'
 
 def parse_xml(input_file):
     # parse the dbwrench file
@@ -96,7 +96,7 @@ def BUILD_MSSSQL_DDL(opts, ddl_objs, use_schemas):
     #-------- Write MsSQL DDL --------#
     #---------------------------------#
     sys.stdout.write('> Building MsSQL DDL...')
-    outdir = os.path.join(os.path.abspath(opts.output), 'WaMDaM_1.04_MSSQL.sql')
+    outdir = os.path.join(os.path.abspath(opts.output), 'WaMDaM_1.05_MSSQL.sql')
     with open(outdir, 'w') as f:
         f.write(translator.MSSQL(opts, ddl_objs).build_ddl())
     sys.stdout.write('done\n')
@@ -106,7 +106,7 @@ def BUILD_POSTGRES_DDL(opts, ddl_objs, use_schemas):
     #-------- Write PostgreSQL DDL --------#
     #--------------------------------------#
     sys.stdout.write('> Building PostgreSQL DDL...')
-    outdir = os.path.join(os.path.abspath(opts.output), 'WaMDaM_1.04_PostgreSQL.sql')
+    outdir = os.path.join(os.path.abspath(opts.output), 'WaMDaM_1.05_PostgreSQL.sql')
     with open(outdir, 'w') as f:
         f.write(translator.POSTGRESQL(opts, ddl_objs).build_ddl())
     sys.stdout.write('done\n')
@@ -116,7 +116,7 @@ def BUILD_MYSQL_DDL(opts, ddl_objs, use_schemas):
     #-------- Write MySQL DDL --------#
     #---------------------------------#
     sys.stdout.write('> Building MySQL DDL...')
-    outdir = os.path.join(os.path.abspath(opts.output), 'WaMDaM_1.04_MySQL.sql')
+    outdir = os.path.join(os.path.abspath(opts.output), 'WaMDaM_1.05_MySQL.sql')
     with open(outdir, 'w') as f:
         f.write(translator.MYSQL(opts, ddl_objs).build_ddl())
     sys.stdout.write('done\n')
@@ -126,7 +126,7 @@ def BUILD_SQLITE_DDL(opts, ddl_objs, use_schemas):
     #-------- Write SQLite DDL --------#
     #----------------------------------#
     sys.stdout.write('> Building SQLite DDL...')
-    outdir = os.path.join(os.path.abspath(opts.output), 'WaMDaM_1.04_SQLite.sql')
+    outdir = os.path.join(os.path.abspath(opts.output), 'WaMDaM_1.05_SQLite.sql')
     with open(outdir, 'w') as f:
         f.write(translator.SQLITE(opts, ddl_objs).build_ddl())
     sys.stdout.write('done\n')
